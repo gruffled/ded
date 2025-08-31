@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daggerheart Encounter Designer</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for a cleaner look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic theme and layout styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark gray background */
+            color: #d1d5db; /* Light gray text */
+        }
+        /* Custom scrollbar for a better look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+
+        /* Styles for the adversary cards */
+        .card {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px M12px rgba(0,0,0,0.3);
+        }
+        /* Highlighting for adversaries relative to party tier */
+        .card.at-level { border-left: 4px solid #22c55e; } /* Green */
+        .card.below-level { border-left: 4px solid #3b82f6; } /* Blue */
+        .card.above-level { border-left: 4px solid #eab308; } /* Yellow */
+
+        .tier-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            color: #e5e7eb;
+        }
+        /* Color-coding tiers for quick visual identification */
+        .tier-1 { background-color: #374151; }
+        .tier-2 { background-color: #1d4ed8; }
+        .tier-3 { background-color: #9333ea; }
+        .tier-4 { background-color: #e11d48; }
+
+        /* Glassmorphism effect for the sticky header panels */
+        .sticky-panel {
+            position: sticky;
+            top: 1.5rem; /* Corresponds to p-6 */
+            backdrop-filter: blur(10px);
+            background-color: rgba(31, 41, 55, 0.8);
+            border: 1px solid #374151;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="p-6">
+    <main class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-3rem)]">
+        <!-- Left Column: Controls and Current Encounter -->
+        <div class="flex flex-col gap-6">
+            <div class="rounded-lg p-6 sticky-panel">
+                <h1 class="text-2xl font-bold text-white mb-4">Encounter Budget</h1>
+                <div class="flex items-center gap-6 mb-4">
+                    <div class="flex items-center gap-4">
+                        <label for="party-size" class="font-medium text-gray-300">Party Size:</label>
+                        <input type="number" id="party-size" value="4" min="1" max="10" class="w-20 bg-gray-900 border border-gray-600 rounded-md px-3 py-1.5 text-center text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+                     <div class="flex items-center gap-4">
+                        <label for="party-level" class="font-medium text-gray-300">Party Level:</label>
+                        <input type="number" id="party-level" value="1" min="1" max="10" class="w-20 bg-gray-900 border border-gray-600 rounded-md px-3 py-1.5 text-center text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                        <span class="block text-sm text-gray-400">Total Budget</span>
+                        <span id="total-budget" class="text-2xl font-bold text-white">0</span>
+                    </div>
+                    <div>
+                        <span class="block text-sm text-gray-400">Spent</span>
+                        <span id="spent-points" class="text-2xl font-bold text-blue-400">0</span>
+                    </div>
+                    <div>
+                        <span class="block text-sm text-gray-400">Remaining</span>
+                        <span id="remaining-points" class="text-2xl font-bold text-green-400">0</span>
+                    </div>
+                </div>
+                 <div class="text-center mt-3">
+                     <span class="text-sm text-gray-400">Party Tier: <span id="party-tier" class="font-bold text-white">1</span></span>
+                 </div>
+            </div>
+
+            <div class="flex-grow flex flex-col bg-[#1f2937] border border-[#374151] rounded-lg p-6 min-h-0">
+                <h2 class="text-xl font-bold text-white mb-4">Current Encounter</h2>
+                <div id="encounter-list" class="flex-grow overflow-y-auto space-y-3 pr-2">
+                    <!-- Adversaries added by the user will appear here -->
+                    <p class="text-gray-500 italic text-center py-8">Add adversaries from the list to build your encounter.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Full Adversary List -->
+        <div class="lg:col-span-2 bg-[#1f2937] border border-[#374151] rounded-lg p-6 flex flex-col min-h-0">
+            <div class="sticky-panel -m-6 mb-0 p-6 rounded-t-lg">
+                 <h2 class="text-xl font-bold text-white mb-4">Adversary Library</h2>
+                 <input type="text" id="search-bar" placeholder="Search by name, type, or tier..." class="w-full bg-gray-900 border border-gray-600 rounded-md px-4 py-2 text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+            <div id="adversary-list" class="flex-grow overflow-y-auto mt-6 space-y-3 pr-2">
+                <!-- Jinja2 will populate this list with adversary data from the Python backend -->
+                {% for adversary in adversaries %}
+                <div class="card adversary-card rounded-lg p-4 flex items-center justify-between"
+                     data-name="{{ adversary.name }}"
+                     data-points="{{ adversary.battle_points }}"
+                     data-tier="{{ adversary.tier }}"
+                     data-type="{{ adversary.type }}"
+                     data-hp="{{ adversary.hp }}"
+                     data-info="{{ adversary.name|lower }} {{ adversary.type|lower }} tier {{ adversary.tier }}">
+                    <div>
+                        <h3 class="font-bold text-white">{{ adversary.name }}</h3>
+                        <div class="flex items-center gap-3 text-sm text-gray-400 mt-1">
+                           <span class="tier-badge tier-{{ adversary.tier }}">Tier {{ adversary.tier }}</span>
+                           <span>{{ adversary.type }}</span>
+                           <span>HP: {{ adversary.hp }}</span>
+                           <span class="font-semibold text-blue-400">BP: {{ adversary.battle_points }}</span>
+                        </div>
+                    </div>
+                    <button class="add-btn bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-1.5 rounded-md transition-colors">Add</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element Selection ---
+            const partySizeInput = document.getElementById('party-size');
+            const partyLevelInput = document.getElementById('party-level');
+            const partyTierEl = document.getElementById('party-tier');
+            const totalBudgetEl = document.getElementById('total-budget');
+            const spentPointsEl = document.getElementById('spent-points');
+            const remainingPointsEl = document.getElementById('remaining-points');
+            const adversaryList = document.getElementById('adversary-list');
+            const encounterList = document.getElementById('encounter-list');
+            const searchBar = document.getElementById('search-bar');
+            const allAdversaryCards = Array.from(document.querySelectorAll('.adversary-card'));
+            
+            let partyTier = 1;
+
+            // --- Core Functions ---
+            
+            /**
+             * Calculates Daggerheart Tier from a level.
+             * @param {number} level - The party's level.
+             * @returns {number} The corresponding tier.
+             */
+            function getTier(level) {
+                if (level <= 1) return 1;
+                if (level <= 4) return 2;
+                if (level <= 7) return 3;
+                return 4;
+            }
+            
+            /**
+             * Updates the styling of adversary cards based on their tier relative to the party's.
+             */
+            function updateAdversaryStyles() {
+                allAdversaryCards.forEach(card => {
+                    const adversaryTier = parseInt(card.dataset.tier);
+                    card.classList.remove('at-level', 'below-level', 'above-level');
+                    if (adversaryTier === partyTier) {
+                        card.classList.add('at-level');
+                    } else if (adversaryTier < partyTier) {
+                        card.classList.add('below-level');
+                    } else {
+                        card.classList.add('above-level');
+                    }
+                });
+            }
+
+            /**
+             * Calculates and updates the total battle points budget.
+             * It calls other functions to update the whole UI.
+             */
+            function updateUI() {
+                const partySize = parseInt(partySizeInput.value) || 0;
+                const partyLevel = parseInt(partyLevelInput.value) || 1;
+                partyTier = getTier(partyLevel);
+                
+                partyTierEl.textContent = partyTier;
+
+                // Base budget formula from SRD pg. 71: (3 * PCs) + 2
+                totalBudgetEl.textContent = (3 * partySize) + 2;
+                
+                updateEncounterCost();
+                updateAdversaryStyles();
+            }
+
+            /**
+             * Calculates the current cost of the encounter and updates the display.
+             * Adjusts cost for lower-tier adversaries.
+             */
+            function updateEncounterCost() {
+                const encounterCards = encounterList.querySelectorAll('.card');
+                let currentCost = 0;
+                encounterCards.forEach(card => {
+                    const basePoints = parseInt(card.dataset.points);
+                    const adversaryTier = parseInt(card.dataset.tier);
+                    let adjustedCost = basePoints;
+
+                    // SRD pg. 71: Using a lower-tier adversary gives a budget bonus,
+                    // which we implement here as a cost reduction for simplicity.
+                    if (adversaryTier < partyTier) {
+                        adjustedCost = Math.max(0, basePoints - 1); // Cost cannot be negative
+                    }
+                    currentCost += adjustedCost;
+                });
+
+                spentPointsEl.textContent = currentCost;
+                const totalBudget = parseInt(totalBudgetEl.textContent);
+                const remaining = totalBudget - currentCost;
+                remainingPointsEl.textContent = remaining;
+
+                // Change color based on remaining points
+                remainingPointsEl.classList.remove('text-green-400', 'text-yellow-400', 'text-red-400');
+                if (remaining < 0) {
+                    remainingPointsEl.classList.add('text-red-400');
+                } else if (remaining < totalBudget * 0.25) {
+                    remainingPointsEl.classList.add('text-yellow-400');
+                } else {
+                    remainingPointsEl.classList.add('text-green-400');
+                }
+                
+                const placeholder = encounterList.querySelector('p');
+                if (placeholder) {
+                    placeholder.style.display = encounterCards.length > 0 ? 'none' : 'block';
+                }
+            }
+            
+            /**
+             * Adds an adversary to the current encounter list.
+             * @param {HTMLElement} originalCard - The adversary card from the library.
+             */
+            function addAdversary(originalCard) {
+                const clonedCard = originalCard.cloneNode(true);
+                clonedCard.querySelector('.add-btn').remove();
+
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = 'Remove';
+                removeBtn.className = 'remove-btn bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-1.5 rounded-md transition-colors';
+                clonedCard.appendChild(removeBtn);
+
+                encounterList.appendChild(clonedCard);
+                updateEncounterCost();
+            }
+            
+            /**
+             * Filters the adversary library based on the search input.
+             */
+            function filterAdversaries() {
+                const searchTerm = searchBar.value.toLowerCase().trim();
+                allAdversaryCards.forEach(card => {
+                    card.style.display = card.dataset.info.includes(searchTerm) ? 'flex' : 'none';
+                });
+            }
+
+            // --- Event Listeners ---
+            partySizeInput.addEventListener('input', updateUI);
+            partyLevelInput.addEventListener('input', updateUI);
+
+            adversaryList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('add-btn')) {
+                    addAdversary(e.target.closest('.adversary-card'));
+                }
+            });
+
+            encounterList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-btn')) {
+                    e.target.closest('.adversary-card').remove();
+                    updateEncounterCost();
+                }
+            });
+            
+            searchBar.addEventListener('input', filterAdversaries);
+
+            // --- Initial Setup ---
+            updateUI();
+        });
+    </script>
+</body>
+</html>
+
