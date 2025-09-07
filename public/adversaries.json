@@ -332,7 +332,7 @@
       "damage": "1d12+2 phy"
     },
     "experience": {
-      "name": "Camoufl age",
+      "name": "Camouflage",
       "modifier": 2
     },
     "features": [
@@ -4467,10 +4467,10 @@
   },
   {
     "name": "ZOMBIE LEGION",
-    "tier": 3,
+    "tier": 4,
     "type": "Horde",
     "battle_points": 2,
-    "description": "(3/HP) A large pack of undead, still powerful despite their rotting fl esh.",
+    "description": "(3/HP) A large pack of undead, still powerful despite their rotting flesh.",
     "motives": "Consume brain, shred fl esh, surround",
     "difficulty": 17,
     "thresholds": {

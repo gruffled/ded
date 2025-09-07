@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Apply a dark theme using Bootstrap 5.3 variables */
+[data-bs-theme="dark"] {
+  --bs-body-bg: #212529;
+  --bs-body-color: #dee2e6;
+  --bs-secondary-bg: #343a40;
+  --bs-border-color: #495057;
+}
+
+body {
+  font-family: 'Libre Franklin', sans-serif;
+}
