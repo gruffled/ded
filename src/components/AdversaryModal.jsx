@@ -63,15 +63,26 @@ function AdversaryModal({ adversary, onClose }) {
       </Modal.Header>
       <Modal.Body
         className="modal-gradient text-light"
-        style={{ background: "linear-gradient(135deg, #6225f0ff 0%, #000 100%)" }}
+        style={{
+          background: "linear-gradient(135deg, #2a3886ff 0%, #000218ff 100%)",
+        }}
       >
         <div className="d-flex align-items-center gap-3 mb-3">
           <Badge pill bg="primary">
             Tier {adversary.tier}
           </Badge>
-          <span className="text-muted">{adversary.type}</span>
+          <span className="fw-bold">{adversary.type}</span>
         </div>
-        <p className="fst-italic">{adversary.description}</p>
+        <div className="mb-2">
+          <strong>Description:</strong>
+          <p className="fst-italic mb-0">{adversary.description}</p>
+        </div>
+        <div className="mb-2">
+          <strong>Motives & Tactics:</strong>
+          <div className="ms-3">
+            {adversary.motives && <div>{adversary.motives}</div>}
+          </div>
+        </div>
         <ListGroup horizontal className="text-center my-3">
           <ListGroup.Item className="bg-secondary text-light">
             <strong>Difficulty</strong>
@@ -99,13 +110,12 @@ function AdversaryModal({ adversary, onClose }) {
             <br />
             {formatContent(adversary.stress)}
           </ListGroup.Item>
+          <ListGroup.Item className="bg-secondary text-light">
+            <strong>ATK Modifier</strong>
+            <br />
+            {formatContent(adversary.attack_modifier)}
+          </ListGroup.Item>
         </ListGroup>
-        <div className="mb-2">
-          <strong>Motives & Tactics:</strong>
-          <div className="ms-3">
-            {adversary.motives && <div>{adversary.motives}</div>}
-          </div>
-        </div>
         <div className="mb-2">
           <strong>Standard Attack</strong>
           <div className="ms-3">
@@ -117,9 +127,6 @@ function AdversaryModal({ adversary, onClose }) {
             )}
             {adversary.standard_attack?.damage && (
               <div>Damage: {adversary.standard_attack.damage}</div>
-            )}
-            {adversary.attack_modifier && (
-              <div>ATK Modifier: {adversary.attack_modifier}</div>
             )}
           </div>
         </div>
@@ -162,6 +169,9 @@ function AdversaryModal({ adversary, onClose }) {
                 <ListGroup.Item
                   key={index}
                   className="bg-dark text-light border-secondary"
+                  style={{
+                    background: "linear-gradient(135deg, #0d1857ff 0%, #000218ff 100%)",
+                  }}
                 >
                   <div className="fw-bold">
                     {feature.name}{" "}

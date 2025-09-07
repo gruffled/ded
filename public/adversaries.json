@@ -32,7 +32,7 @@
       {
         "name": "Spit Acid",
         "type": "Action",
-        "description": "Make an attack against all targets in front of the Burrower within Close range. Targets the Burrower succeeds against take 2d6 physical damage and must mark an Armor Slot without receiving its benefi ts (they can still use armor to reduce the damage). If they can\u2019t mark an Armor Slot, they must mark an additional HP and you gain a Fear."
+        "description": "Make an attack against all targets in front of the Burrower within Close range. Targets the Burrower succeeds against take 2d6 physical damage and must mark an Armor Slot without receiving its benefi ts (they can still use armor to reduce the damage). If they cant mark an Armor Slot, they must mark an additional HP and you gain a Fear."
       },
       {
         "name": "Acid Bath",
@@ -106,7 +106,7 @@
       {
         "name": "Bone Breaker",
         "type": "Passive",
-        "description": "The Ogre\u2019s attacks deal direct damage."
+        "description": "The Ogres attacks deal direct damage."
       },
       {
         "name": "Hail of Boulders",
@@ -150,12 +150,12 @@
       {
         "name": "Trample",
         "type": "Action",
-        "description": "Mark a Stress to make an attack against all targets in the Construct\u2019s path when they move. Targets the Construct succeeds against take 1d8 physical damage."
+        "description": "Mark a Stress to make an attack against all targets in the Constructs path when they move. Targets the Construct succeeds against take 1d8 physical damage."
       },
       {
         "name": "Overload",
         "type": "Reaction",
-        "description": "Before rolling damage for the Construct\u2019s attack, you can mark a Stress to gain a +10 bonus to the damage roll. The Construct can then take the spotlight again."
+        "description": "Before rolling damage for the Constructs attack, you can mark a Stress to gain a +10 bonus to the damage roll. The Construct can then take the spotlight again."
       },
       {
         "name": "Death Quake",
@@ -178,7 +178,12 @@
     },
     "hp": 3,
     "stress": 4,
-    "standard_attack": null,
+    "attack_modifier": "-4",
+    "standard_attack": {
+      "name": "Daggers",
+      "range": "Melee",
+      "damage": "1d4+2 phy"
+    },
     "experience": {
       "name": "Socialite",
       "modifier": 3
@@ -283,7 +288,7 @@
       {
         "name": "Bloodsucker",
         "type": "Reaction",
-        "description": "When the Mosquitoes\u2019 attack causes a target to mark HP, you can mark a Stress to force the target to mark an additional HP."
+        "description": "When the Mosquitoes attack causes a target to mark HP, you can mark a Stress to force the target to mark an additional HP."
       }
     ]
   },
@@ -419,7 +424,7 @@
     "tier": 1,
     "type": "Ranged",
     "battle_points": 2,
-    "description": "A tall guard bearing a longbow and quiver with arrows fl etched in the settlement\u2019s colors.",
+    "description": "A tall guard bearing a longbow and quiver with arrows fl etched in the settlements colors.",
     "motives": "Arrest, close gates, make it through the day,",
     "difficulty": 10,
     "thresholds": {
@@ -445,7 +450,7 @@
     "tier": 1,
     "type": "Standard",
     "battle_points": 2,
-    "description": "An armored guard bearing a sword and shield painted in the settlement\u2019s colors.",
+    "description": "An armored guard bearing a sword and shield painted in the settlements colors.",
     "motives": "Arrest, close gates, make it through the day,",
     "difficulty": 12,
     "thresholds": {
@@ -514,7 +519,7 @@
     "tier": 1,
     "type": "Standard",
     "battle_points": 2,
-    "description": "A cunning criminal in a cloak bearing one of the gang\u2019s iconic knives.",
+    "description": "A cunning criminal in a cloak bearing one of the gangs iconic knives.",
     "motives": "Escape, profi t, steal, throw smoke",
     "difficulty": 12,
     "thresholds": {
@@ -694,7 +699,7 @@
       {
         "name": "Cloaked",
         "type": "Action",
-        "description": "Become Hidden until after the Shadow\u2019s next attack. Attacks made while Hidden from this feature have advantage."
+        "description": "Become Hidden until after the Shadows next attack. Attacks made while Hidden from this feature have advantage."
       }
     ]
   },
@@ -869,7 +874,7 @@
       {
         "name": "Reaper",
         "type": "Reaction",
-        "description": "Before rolling damage for the Demon\u2019s attack, you can mark a Stress to gain a bonus to the damage roll equal to the Demon\u2019s current number of marked HP."
+        "description": "Before rolling damage for the Demons attack, you can mark a Stress to gain a bonus to the damage roll equal to the Demons current number of marked HP."
       },
       {
         "name": "Momentum",
@@ -927,7 +932,7 @@
       {
         "name": "Acidic Form",
         "type": "Passive",
-        "description": "When the Ooze makes a successful attack, the target must mark an Armor Slot without receiving its benefi ts (they can still use armor to reduce the damage). If they can\u2019t mark an Armor Slot, they must mark an additional HP."
+        "description": "When the Ooze makes a successful attack, the target must mark an Armor Slot without receiving its benefi ts (they can still use armor to reduce the damage). If they cant mark an Armor Slot, they must mark an additional HP."
       },
       {
         "name": "Envelop",
@@ -973,14 +978,14 @@
       "damage": "1d8+3 mag"
     },
     "experience": {
-      "name": "Camoufl age",
+      "name": "Camouflage",
       "modifier": 3
     },
     "features": [
       {
         "name": "Ignite",
         "type": "Action",
-        "description": "Make an attack against a target within Very Close range. On a success, the target takes 1d8 magic damage and is Ignited until they\u2019re extinguished with a successful Finesse Roll (14). While Ignited, the target takes 1d4 magic damage when they make an action roll."
+        "description": "Make an attack against a target within Very Close range. On a success, the target takes 1d8 magic damage and is Ignited until theyre extinguished with a successful Finesse Roll (14). While Ignited, the target takes 1d4 magic damage when they make an action roll."
       },
       {
         "name": "Split",
@@ -1023,7 +1028,7 @@
       {
         "name": "Exile",
         "type": "Action",
-        "description": "Spend a Fear and target a PC. The Noble proclaims that the target and their allies are exiled from the noble\u2019s territory. While exiled, the target and their allies have disadvantage during social situations within the Noble\u2019s domain 79"
+        "description": "Spend a Fear and target a PC. The Noble proclaims that the target and their allies are exiled from the nobles territory. While exiled, the target and their allies have disadvantage during social situations within the Nobles domain 79"
       }
     ]
   },
@@ -1033,7 +1038,7 @@
     "type": "Leader",
     "battle_points": 3,
     "description": "A charismatic sea dog with an impressive hat, eager to raid and plunder.",
-    "motives": "Command, make \u2019em walk the plank, plunder,",
+    "motives": "Command, make em walk the plank, plunder,",
     "difficulty": 14,
     "thresholds": {
       "major": 7,
@@ -1074,7 +1079,7 @@
     "tier": 1,
     "type": "Horde",
     "battle_points": 2,
-    "description": "(\ue543/HP) Seafaring scoundrels moving in a ravaging pack.",
+    "description": "(/HP) Seafaring scoundrels moving in a ravaging pack.",
     "motives": "Gang up, plunder, raid",
     "difficulty": 12,
     "thresholds": {
@@ -1365,7 +1370,7 @@
       {
         "name": "Blend In",
         "type": "Reaction",
-        "description": "When the Soldier makes a successful attack, you can mark a Stress to become Hidden until the Soldier\u2019s next attack or a PC succeeds on an Instinct Roll (14) to fi nd them."
+        "description": "When the Soldier makes a successful attack, you can mark a Stress to become Hidden until the Soldiers next attack or a PC succeeds on an Instinct Roll (14) to fi nd them."
       }
     ]
   },
@@ -1428,7 +1433,7 @@
       {
         "name": "Drain and Multiply",
         "type": "Reaction",
-        "description": "When an attack from the Bramble causes a target to mark HP and there are three or more Tangle Bramble Minions within Close range, you can combine the Minions into a Tangle Bramble Swarm Horde. The Horde\u2019s HP is equal to the number of Minions combined."
+        "description": "When an attack from the Bramble causes a target to mark HP and there are three or more Tangle Bramble Minions within Close range, you can combine the Minions into a Tangle Bramble Swarm Horde. The Hordes HP is equal to the number of Minions combined."
       }
     ]
   },
@@ -1437,7 +1442,7 @@
     "tier": 1,
     "type": "Leader",
     "battle_points": 3,
-    "description": "An imperious tree-person leading their forest\u2019s defenses.",
+    "description": "An imperious tree-person leading their forests defenses.",
     "motives": "Command, nurture, prune the unwelcome",
     "difficulty": 11,
     "thresholds": {
@@ -1460,7 +1465,7 @@
       {
         "name": "Thorny Cage",
         "type": "Action",
-        "description": "Spend a Fear to form a cage around a target within Very Close range and Restrain them until they\u2019re freed with a successful Strength Roll. When a creature makes an action roll against the cage, they must mark a Stress."
+        "description": "Spend a Fear to form a cage around a target within Very Close range and Restrain them until theyre freed with a successful Strength Roll. When a creature makes an action roll against the cage, they must mark a Stress."
       },
       {
         "name": "Momentum",
@@ -1594,7 +1599,7 @@
       {
         "name": "Horrifying",
         "type": "Passive",
-        "description": "Targets who mark HP from the Zombie\u2019s attacks must also mark a Stress."
+        "description": "Targets who mark HP from the Zombies attacks must also mark a Stress."
       }
     ]
   },
@@ -1745,7 +1750,7 @@
       {
         "name": "Strike as One",
         "type": "Action",
-        "description": "Mark a Stress to spotlight a number of other Assassins equal to the Assassin\u2019s unmarked Stress."
+        "description": "Mark a Stress to spotlight a number of other Assassins equal to the Assassins unmarked Stress."
       },
       {
         "name": "The Subtle Blade",
@@ -1792,7 +1797,7 @@
       {
         "name": "Overcharge",
         "type": "Reaction",
-        "description": "Before rolling damage for the Box\u2019s attack, you can mark a Stress to add a d6 to the damage roll. Additionally, you gain a Fear."
+        "description": "Before rolling damage for the Boxs attack, you can mark a Stress to add a d6 to the damage roll. Additionally, you gain a Fear."
       },
       {
         "name": "Death Quake",
@@ -2143,7 +2148,7 @@
       {
         "name": "Deadly Companion",
         "type": "Action",
-        "description": "Twice per scene, summon a Bear, Dire Wolf, or similar Tier 1 animal adversary under the Beastmaster\u2019s control. The adversary appears at Close range and is immediately spotlighted."
+        "description": "Twice per scene, summon a Bear, Dire Wolf, or similar Tier 1 animal adversary under the Beastmasters control. The adversary appears at Close range and is immediately spotlighted."
       }
     ]
   },
@@ -2214,12 +2219,12 @@
       {
         "name": "Take Off",
         "type": "Action",
-        "description": "Make an attack against a target within Very Close range. On a success, deal 2d4+3 physical damage and the target must succeed on an Agility Reaction Roll or become temporarily Restrained within the Eagle\u2019s massive talons. If the target is Restrained, the Eagle immediately lifts into the air to Very Far range above the battlefi eld while holding them."
+        "description": "Make an attack against a target within Very Close range. On a success, deal 2d4+3 physical damage and the target must succeed on an Agility Reaction Roll or become temporarily Restrained within the Eagles massive talons. If the target is Restrained, the Eagle immediately lifts into the air to Very Far range above the battlefi eld while holding them."
       },
       {
         "name": "Deadly Drop",
         "type": "Action",
-        "description": "While fl ying, the Eagle can drop a Restrained target they are holding. When dropped, the target is no longer Restrained but starts falling. If their fall isn\u2019t prevented during the PCs\u2019 next action, the target takes 2d20 physical damage when they land."
+        "description": "While fl ying, the Eagle can drop a Restrained target they are holding. When dropped, the target is no longer Restrained but starts falling. If their fall isnt prevented during the PCs next action, the target takes 2d20 physical damage when they land."
       }
     ]
   },
@@ -2277,12 +2282,12 @@
       {
         "name": "Sunsear Arrows",
         "type": "Passive",
-        "description": "When the Gorgon makes a successful standard attack, the target Glows until the end of the scene and can\u2019t become Hidden. Attack rolls made against a Glowing target have advantage."
+        "description": "When the Gorgon makes a successful standard attack, the target Glows until the end of the scene and cant become Hidden. Attack rolls made against a Glowing target have advantage."
       },
       {
         "name": "Crown of Serpents",
         "type": "Action",
-        "description": "Make an attack roll against a target within Melee range using the Gorgon\u2019s protective snakes. On a success, mark a Stress to deal 2d10+4 physical damage and the target must mark a Stress."
+        "description": "Make an attack roll against a target within Melee range using the Gorgons protective snakes. On a success, mark a Stress to deal 2d10+4 physical damage and the target must mark a Stress."
       },
       {
         "name": "Petrifying Gaze",
@@ -2321,12 +2326,12 @@
       {
         "name": "Peerless Accuracy",
         "type": "Passive",
-        "description": "Before the Flickerfl y makes an attack, roll a d6. On a result of 4 or higher, the target\u2019s Evasion is halved against this attack."
+        "description": "Before the Flickerfl y makes an attack, roll a d6. On a result of 4 or higher, the targets Evasion is halved against this attack."
       },
       {
         "name": "Mind Dance",
         "type": "Action",
-        "description": "Mark a Stress to create a magically dazzling display that grapples the minds of nearby foes. All targets within Close range must make an Instinct Reaction Roll. For each target who failed, you gain a Fear and the Flickerfl y learns one of the target\u2019s fears."
+        "description": "Mark a Stress to create a magically dazzling display that grapples the minds of nearby foes. All targets within Close range must make an Instinct Reaction Roll. For each target who failed, you gain a Fear and the Flickerfl y learns one of the targets fears."
       },
       {
         "name": "Hallucinatory Breath",
@@ -2427,7 +2432,7 @@
       {
         "name": "The Best Muscle Money Can Buy",
         "type": "Action",
-        "description": "Once per scene, mark a Stress to summon 1d4+1 Tier 1 adversaries, who appear at Far range, to enforce the Baron\u2019s will 87"
+        "description": "Once per scene, mark a Stress to summon 1d4+1 Tier 1 adversaries, who appear at Far range, to enforce the Barons will 87"
       }
     ]
   },
@@ -2459,7 +2464,7 @@
       {
         "name": "Charging Bull",
         "type": "Action",
-        "description": "Mark a Stress to charge through a group within Close range and make an attack against all targets in the Minotaur\u2019s path. Targets the Minotaur succeeds against take 2d6+8 physical damage and are knocked back to Very Far range. If a target is knocked into a solid object or another creature, they take an extra 1d6 damage (combine the damage)."
+        "description": "Mark a Stress to charge through a group within Close range and make an attack against all targets in the Minotaurs path. Targets the Minotaur succeeds against take 2d6+8 physical damage and are knocked back to Very Far range. If a target is knocked into a solid object or another creature, they take an extra 1d6 damage (combine the damage)."
       },
       {
         "name": "Gore",
@@ -2533,7 +2538,7 @@
       {
         "name": "Bend Ears",
         "type": "Action",
-        "description": "Mark a Stress to infl uence an NPC within Melee range with whispered words. That target\u2019s opinion on one matter shifts toward the Advisor\u2019s preference unless it is in direct opposition to the target\u2019s motives."
+        "description": "Mark a Stress to infl uence an NPC within Melee range with whispered words. That targets opinion on one matter shifts toward the Advisors preference unless it is in direct opposition to the targets motives."
       },
       {
         "name": "Scapegoat",
@@ -2607,12 +2612,12 @@
       {
         "name": "Rending Bite",
         "type": "Passive",
-        "description": "When the Shark makes a successful attack, the target must mark an Armor Slot without receiving its benefi ts (they can still use armor to reduce the damage). If they can\u2019t mark an Armor Slot, they must mark an additional HP."
+        "description": "When the Shark makes a successful attack, the target must mark an Armor Slot without receiving its benefi ts (they can still use armor to reduce the damage). If they cant mark an Armor Slot, they must mark an additional HP."
       },
       {
         "name": "Blood in the Water",
         "type": "Reaction",
-        "description": "When a creature within Close range of the Shark marks HP from another creature\u2019s attack, you can mark a Stress to immediately spotlight the Shark, moving them into Melee range of the target and making a standard attack."
+        "description": "When a creature within Close range of the Shark marks HP from another creatures attack, you can mark a Stress to immediately spotlight the Shark, moving them into Melee range of the target and making a standard attack."
       }
     ]
   },
@@ -2644,7 +2649,7 @@
       {
         "name": "Enchanting Song",
         "type": "Action",
-        "description": "Spend a Fear to sing a song that aff ects all targets within Close range. Targets must succeed on an Instinct Reaction Roll or become Entranced until they mark 2 Stress. Other Sirens within Close range of the target can mark a Stress to each add a +1 bonus to the Difficulty of the reaction roll. While Entranced, a target can\u2019t act and is Vulnerable."
+        "description": "Spend a Fear to sing a song that aff ects all targets within Close range. Targets must succeed on an Instinct Reaction Roll or become Entranced until they mark 2 Stress. Other Sirens within Close range of the target can mark a Stress to each add a +1 bonus to the Difficulty of the reaction roll. While Entranced, a target cant act and is Vulnerable."
       }
     ]
   },
@@ -2713,7 +2718,7 @@
       {
         "name": "Hold Fast",
         "type": "Reaction",
-        "description": "When the Captain\u2019s Spectral allies are forced to make a reaction roll, you can mark a Stress to give those allies a +2 bonus to the roll."
+        "description": "When the Captains Spectral allies are forced to make a reaction roll, you can mark a Stress to give those allies a +2 bonus to the roll."
       },
       {
         "name": "Momentum",
@@ -2851,12 +2856,12 @@
       {
         "name": "Refresh Warding Sphere",
         "type": "Action",
-        "description": "Mark a Stress to refresh the Wizard\u2019s \u201cWarding Sphere\u201d reaction."
+        "description": "Mark a Stress to refresh the Wizards \u201cWarding Sphere\u201d reaction."
       },
       {
         "name": "Eruption",
         "type": "Action",
-        "description": "Spend a Fear and choose a point within Far range. A Very Close area around that point erupts into impassable terrain. All targets within that area must make an Agility Reaction Roll (14). Targets who fail take 2d10 physical damage and are thrown out of the area. Targets who succeed take half damage and aren\u2019t moved."
+        "description": "Spend a Fear and choose a point within Far range. A Very Close area around that point erupts into impassable terrain. All targets within that area must make an Agility Reaction Roll (14). Targets who fail take 2d10 physical damage and are thrown out of the area. Targets who succeed take half damage and arent moved."
       },
       {
         "name": "Arcane Artillery",
@@ -2866,7 +2871,7 @@
       {
         "name": "Warding Sphere",
         "type": "Reaction",
-        "description": "When the Wizard takes damage from an attack within Close range, deal 2d6 magic damage to the attacker. This reaction can\u2019t be used again until the Wizard refreshes it with their \u201cRefresh Warding Sphere\u201d action."
+        "description": "When the Wizard takes damage from an attack within Close range, deal 2d6 magic damage to the attacker. This reaction cant be used again until the Wizard refreshes it with their \u201cRefresh Warding Sphere\u201d action."
       }
     ]
   },
@@ -2895,7 +2900,7 @@
       {
         "name": "Never Misses",
         "type": "Passive",
-        "description": "When the Flickerfl y makes an attack, the target\u2019s Evasion is halved against the attack."
+        "description": "When the Flickerfl y makes an attack, the targets Evasion is halved against the attack."
       },
       {
         "name": "Deadly Flight",
@@ -2910,7 +2915,7 @@
       {
         "name": "Mind Dance",
         "type": "Action",
-        "description": "Mark a Stress to create a magically dazzling display that grapples the minds of nearby foes. All targets within Close range must make an Instinct Reaction Roll. For each target who failed, you gain a Fear and the Flickerfl y learns one of the target\u2019s fears."
+        "description": "Mark a Stress to create a magically dazzling display that grapples the minds of nearby foes. All targets within Close range must make an Instinct Reaction Roll. For each target who failed, you gain a Fear and the Flickerfl y learns one of the targets fears."
       },
       {
         "name": "Hallucinatory Breath",
@@ -2952,7 +2957,7 @@
       {
         "name": "Numbers Must Go Up",
         "type": "Passive",
-        "description": "Add a bonus to the Demon\u2019s attack rolls equal to the number of handfuls of gold they have."
+        "description": "Add a bonus to the Demons attack rolls equal to the number of handfuls of gold they have."
       },
       {
         "name": "Money Is Time",
@@ -3036,7 +3041,7 @@
       {
         "name": "Unparalleled Skill",
         "type": "Action",
-        "description": "Mark a Stress to deal the Demon\u2019s standard attack damage to a target within Close range."
+        "description": "Mark a Stress to deal the Demons standard attack damage to a target within Close range."
       },
       {
         "name": "The Root of Villainy",
@@ -3056,7 +3061,7 @@
     "type": "Ranged",
     "battle_points": 2,
     "description": "A fi ckle creature of spindly limbs and insatiable desires.",
-    "motives": "Join in on others\u2019 success, take what belongs to",
+    "motives": "Join in on others success, take what belongs to",
     "difficulty": 17,
     "thresholds": {
       "major": 17,
@@ -3083,7 +3088,7 @@
       {
         "name": "Rivalry",
         "type": "Reaction",
-        "description": "When a creature within Close range takes damage from a diff erent adversary, you can mark a Stress to add a d4 to the damage roll. What\u2019s Yours Is Mine - Reaction: When a PC takes Severe damage within Very Close range of the Demon, you can spend a Fear to cause the target to make a Finesse Reaction Roll. On a failure, the Demon seizes one item or consumable of their choice from the target\u2019s inventory."
+        "description": "When a creature within Close range takes damage from a diff erent adversary, you can mark a Stress to add a d4 to the damage roll. Whats Yours Is Mine - Reaction: When a PC takes Severe damage within Very Close range of the Demon, you can spend a Fear to cause the target to make a Finesse Reaction Roll. On a failure, the Demon seizes one item or consumable of their choice from the targets inventory."
       }
     ]
   },
@@ -3199,7 +3204,7 @@
       {
         "name": "We Are All One",
         "type": "Reaction",
-        "description": "When an ally dies within Close range, you can spend a Fear to clear 2 HP and 2 Stress as the fallen ally\u2019s life force is returned to the forest."
+        "description": "When an ally dies within Close range, you can spend a Fear to clear 2 HP and 2 Stress as the fallen allys life force is returned to the forest."
       }
     ]
   },
@@ -3254,7 +3259,7 @@
       {
         "name": "Crushing Blows",
         "type": "Passive",
-        "description": "When the Elemental makes a successful attack, the target must mark an Armor Slot without receiving its benefi ts (they can still use armor to reduce the damage). If they can\u2019t mark an Armor Slot, they must mark an additional HP."
+        "description": "When the Elemental makes a successful attack, the target must mark an Armor Slot without receiving its benefi ts (they can still use armor to reduce the damage). If they cant mark an Armor Slot, they must mark an additional HP."
       },
       {
         "name": "Immovable Object",
@@ -3335,7 +3340,7 @@
       {
         "name": "Acidic Form",
         "type": "Passive",
-        "description": "When the Ooze makes a successful attack, the target must mark an Armor Slot without receiving its benefi ts (they can still use armor to reduce the damage). If they can\u2019t mark an Armor Slot, they must mark an additional HP."
+        "description": "When the Ooze makes a successful attack, the target must mark an Armor Slot without receiving its benefi ts (they can still use armor to reduce the damage). If they cant mark an Armor Slot, they must mark an additional HP."
       },
       {
         "name": "Envelop",
@@ -3374,7 +3379,7 @@
       {
         "name": "Relentless (X)",
         "type": "Passive",
-        "description": "The Hydra can be spotlighted X times per GM turn, where X is the Hydra\u2019s number of heads. Spend Fear as usual to spotlight them."
+        "description": "The Hydra can be spotlighted X times per GM turn, where X is the Hydras number of heads. Spend Fear as usual to spotlight them."
       },
       {
         "name": "Regeneration",
@@ -3389,7 +3394,7 @@
       {
         "name": "Magical Weakness",
         "type": "Reaction",
-        "description": "When the Hydra takes magic damage, they become Dazed until the next roll with Fear. While Dazed, they can\u2019t use their Regeneration action but are immune to magic damage."
+        "description": "When the Hydra takes magic damage, they become Dazed until the next roll with Fear. While Dazed, they cant use their Regeneration action but are immune to magic damage."
       }
     ]
   },
@@ -3421,12 +3426,12 @@
       {
         "name": "Crownsguard",
         "type": "Action",
-        "description": "Once per scene, mark a Stress to summon six Tier 3 Minions, who appear at Close range to enforce the Monarch\u2019s will."
+        "description": "Once per scene, mark a Stress to summon six Tier 3 Minions, who appear at Close range to enforce the Monarchs will."
       },
       {
         "name": "Casus Belli",
         "type": "Reaction",
-        "description": "Long-Term Countdown (8). Spend a Fear to activate after the Monarch\u2019s desire for war is fi rst revealed. When it triggers, the Monarch has a reason to rally the nation to war and the support to act on that reason. You gain 1d4 Fear."
+        "description": "Long-Term Countdown (8). Spend a Fear to activate after the Monarchs desire for war is fi rst revealed. When it triggers, the Monarch has a reason to rally the nation to war and the support to act on that reason. You gain 1d4 Fear."
       }
     ]
   },
@@ -3545,7 +3550,7 @@
     "tier": 3,
     "type": "Standard",
     "battle_points": 2,
-    "description": "An intelligent undead with blood-stained lips and a predator\u2019s smile.",
+    "description": "An intelligent undead with blood-stained lips and a predators smile.",
     "motives": "Bite, charm, deceive, feed, intimidate",
     "difficulty": 16,
     "thresholds": {
@@ -3626,12 +3631,12 @@
       {
         "name": "Box In",
         "type": "Action",
-        "description": "Mark a Stress to choose a target within Very Close range to focus on. That target has disadvantage on attack rolls when they\u2019re within Very Close range of the Sentinel. The Sentinel can only focus on one target at a time."
+        "description": "Mark a Stress to choose a target within Very Close range to focus on. That target has disadvantage on attack rolls when theyre within Very Close range of the Sentinel. The Sentinel can only focus on one target at a time."
       },
       {
         "name": "Mana Bolt",
         "type": "Action",
-        "description": "Spend a Fear to lob explosive magic at a point within Far range. All targets within Very Close range of that point must make an Agility Reaction Roll. Targets who fail take 2d8+20 magic damage and are knocked back to Close range. Targets who succeed take half damage and aren\u2019t knocked back."
+        "description": "Spend a Fear to lob explosive magic at a point within Far range. All targets within Very Close range of that point must make an Agility Reaction Roll. Targets who fail take 2d8+20 magic damage and are knocked back to Close range. Targets who succeed take half damage and arent knocked back."
       },
       {
         "name": "Momentum",
@@ -3670,7 +3675,7 @@
       {
         "name": "Concentrate Fire",
         "type": "Reaction",
-        "description": "When another adversary deals damage to a target within Far range of the Turret, you can mark a Stress to add the Turret\u2019s standard attack damage to the damage roll."
+        "description": "When another adversary deals damage to a target within Far range of the Turret, you can mark a Stress to add the Turrets standard attack damage to the damage roll."
       },
       {
         "name": "Detonation",
@@ -3707,7 +3712,7 @@
       {
         "name": "Rend and Crush",
         "type": "Passive",
-        "description": "If a target damaged by the Dragon doesn\u2019t mark an Armor Slot to reduce the damage, they must mark a Stress."
+        "description": "If a target damaged by the Dragon doesnt mark an Armor Slot to reduce the damage, they must mark a Stress."
       },
       {
         "name": "No Hope",
@@ -3783,7 +3788,7 @@
     "tier": 4,
     "type": "Minion",
     "battle_points": 1,
-    "description": "A cursed soul bound to the Fallen\u2019s will.",
+    "description": "A cursed soul bound to the Fallens will.",
     "motives": "Crush, dominate, earn relief, punish",
     "difficulty": 18,
     "thresholds": null,
@@ -3856,7 +3861,7 @@
     "tier": 4,
     "type": "Solo",
     "battle_points": 5,
-    "description": "A Fallen God, wreathed in rage and resentment, bearing millennia of experience in breaking heroes\u2019 spirits.",
+    "description": "A Fallen God, wreathed in rage and resentment, bearing millennia of experience in breaking heroes spirits.",
     "motives": "Corrupt, dominate, punish, break the weak",
     "difficulty": 20,
     "thresholds": {
@@ -4025,7 +4030,7 @@
     "tier": 4,
     "type": "Leader",
     "battle_points": 3,
-    "description": "A divine champion, head of a hallowed host of warriors who enforce their god\u2019s will.",
+    "description": "A divine champion, head of a hallowed host of warriors who enforce their gods will.",
     "motives": "Enforce dogma, fl y, pronounce judgment, smite",
     "difficulty": 20,
     "thresholds": {
@@ -4053,7 +4058,7 @@
       {
         "name": "Judgment",
         "type": "Action",
-        "description": "Spend a Fear to make a target Guilty in the eyes of the Seraph\u2019s god until the Seraph is defeated. While Guilty, the target doesn\u2019t gain Hope on a result with Hope. When the Seraph succeeds on a standard attack against a Guilty target, they deal Severe damage instead of their standard damage. The Seraph can only mark one target at a time."
+        "description": "Spend a Fear to make a target Guilty in the eyes of the Seraphs god until the Seraph is defeated. While Guilty, the target doesnt gain Hope on a result with Hope. When the Seraph succeeds on a standard attack against a Guilty target, they deal Severe damage instead of their standard damage. The Seraph can only mark one target at a time."
       },
       {
         "name": "God Rays",
@@ -4152,7 +4157,7 @@
       {
         "name": "Summon Tormentors",
         "type": "Action",
-        "description": "Once per day, spend 2 Fear to summon 2d4 Tier 2 or below Minions relevant to one of the PC\u2019s personal nightmares. They appear at Close range relative to that PC."
+        "description": "Once per day, spend 2 Fear to summon 2d4 Tier 2 or below Minions relevant to one of the PCs personal nightmares. They appear at Close range relative to that PC."
       },
       {
         "name": "Ominous Knowledge",
@@ -4265,7 +4270,7 @@
     "tier": 4,
     "type": "Solo",
     "battle_points": 5,
-    "description": "No enemy has ever had the insolence to wound the dragon so. As the lava settles, it\u2019s ground to ash like the dragon\u2019s past foes.",
+    "description": "No enemy has ever had the insolence to wound the dragon so. As the lava settles, its ground to ash like the dragons past foes.",
     "motives": "Choke, fl y, intimidate, kill or be killed",
     "difficulty": 18,
     "thresholds": {
@@ -4298,7 +4303,7 @@
       {
         "name": "Ashes to Ashes",
         "type": "Passive",
-        "description": "When a PC rolls a failure while within Close range of the Ashen Tyrant, they lose a Hope and you gain a Fear. If the PC can\u2019t lose a Hope, they must mark a HP."
+        "description": "When a PC rolls a failure while within Close range of the Ashen Tyrant, they lose a Hope and you gain a Fear. If the PC cant lose a Hope, they must mark a HP."
       },
       {
         "name": "Desperate Rampage",
@@ -4355,7 +4360,7 @@
       {
         "name": "Eruption",
         "type": "Action",
-        "description": "Spend a Fear to erupt lava from beneath the Molten Scourge\u2019s scales, fi lling the area within Very Close range with molten lava. All targets in that area must succeed on an Agility Reaction Roll or take 4d6+6 physical damage and be knocked back to Close range. This area remains lava. When a creature other than the Molten Scourge enters that area or acts while inside of it, they must mark 6 HP."
+        "description": "Spend a Fear to erupt lava from beneath the Molten Scourges scales, fi lling the area within Very Close range with molten lava. All targets in that area must succeed on an Agility Reaction Roll or take 4d6+6 physical damage and be knocked back to Close range. This area remains lava. When a creature other than the Molten Scourge enters that area or acts while inside of it, they must mark 6 HP."
       },
       {
         "name": "Volcanic Breath",
@@ -4399,7 +4404,7 @@
       {
         "name": "Fearsome Presence",
         "type": "Passive",
-        "description": "PCs can\u2019t spend Hope to use features against the Zombie."
+        "description": "PCs cant spend Hope to use features against the Zombie."
       },
       {
         "name": "Perfect Strike",
@@ -4409,7 +4414,7 @@
       {
         "name": "Skilled Opportunist",
         "type": "Reaction",
-        "description": "When another adversary deals damage to a target within Very Close range of the Zombie, you can spend a Fear to add the Zombie\u2019s standard attack damage to the damage roll."
+        "description": "When another adversary deals damage to a target within Very Close range of the Zombie, you can spend a Fear to add the Zombies standard attack damage to the damage roll."
       }
     ]
   },
