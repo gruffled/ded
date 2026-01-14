@@ -1,126 +1,153 @@
-# Daggerheart Designer
+<div align="center">
 
-A web-based adversary and encounter designer for the Daggerheart tabletop RPG system. This tool helps GMs and players create, view, and manage adversaries, features, and encounters with a modern, interactive interface.
+# ⚔️ Daggerheart Encounter Designer
 
-## Features
+**Build balanced encounters for your Daggerheart adventures**
 
-- Browse and search a library of adversaries
-- View detailed adversary stats, motives, features, and attacks
-- Build balanced encounters with battle point budgeting
-- Filter and sort adversaries by name or tier
-- Difficulty adjustments for customizing encounter challenge
-- Beautiful modal popups with gradient backgrounds and color-coded badges
-- Responsive, modern UI built with React and Vite
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![React](https://img.shields.io/badge/React-19.1-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-7.1-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## Getting Started
+A modern web-based encounter designer for the Daggerheart tabletop RPG system. Create, manage, and balance encounters with an intuitive interface and powerful battle point calculator.
 
-### Prerequisites
+[Quick Start](#-quick-start) • [Features](#-features) • [Documentation](#-project-structure) • [Contributing](#-contributing)
 
-- Docker and Docker Compose
-- (Optional) Node.js v18+ if running without Docker
-
-### Quick Start
-
-1. Clone the repository:
-
-   ```sh
-   git clone https://github.com/gruffled/ded.git
-   cd ded
-   ```
-
-2. **Development mode** (with hot reload):
-
-   ```sh
-   make dev
-   ```
-
-   Access at `http://localhost:5173`
-
-3. **Production mode** (optimized build):
-   ```sh
-   make prod
-   ```
-   Access at `http://localhost:8080`
-
-### Available Make Commands
-
-- `make dev` - Start development server with hot reload
-- `make prod` - Start production server with nginx
-- `make down` - Stop all containers
-- `make logs` - View container logs
-- `make restart` - Restart development server
-- `make clean` - Stop containers and remove images
-- `make help` - Show all available commands
-
-### Running Without Docker
-
-If you prefer to run the application without Docker:
-
-1. Install dependencies:
-   ```sh
-   npm install
-   ```
-2. Start the development server:
-   ```sh
-   npm run dev
-   ```
-3. Open your browser to `http://localhost:5173`
-
-### Docker Configuration
-
-The project includes:
-
-- `Dockerfile` - Multi-stage production build (Node.js → Nginx)
-- `Dockerfile.dev` - Development environment with hot reload
-- `docker-compose.yml` - Orchestration for both dev and prod environments
-- `Makefile` - Convenient shortcuts for Docker commands
-
-## Project Structure
-
-```
-public/           # Static assets and adversaries.json data
-src/
-  components/     # React UI components
-  constants.js    # Game rules and configuration
-  utils.js        # Business logic and calculations
-  hooks.js        # Custom React hooks
-  index.css       # Global styles
-  main.jsx        # App entry point
-scripts/          # Data extraction and utility scripts
-Dockerfile        # Production Docker configuration
-Dockerfile.dev    # Development Docker configuration
-docker-compose.yml # Docker orchestration
-Makefile          # Convenience commands for Docker
-```
-
-## Architecture
-
-The codebase follows React best practices with:
-
-- **Separation of concerns**: Business logic separated from UI components
-- **Custom hooks**: Reusable state management (`useAdversaryData`, `useEncounter`)
-- **Pure functions**: Testable utility functions for calculations
-- **Constants**: Centralized configuration for game rules
-
-## Customization
-
-- To add or edit adversaries, modify `public/adversaries.json`.
-- UI colors and gradients can be customized in `src/index.css` and component files.
-
-## Contributing
-
-Pull requests and suggestions are welcome! Please open an issue for bugs or feature requests.
-
-## License
-
-This work includes material taken from the Daggerheart System Reference Document 1.0 by Darrington Press LLC, available at [daggerheart.com/srd](https://daggerheart.com/srd).
-
-This work is licensed under the [Darrington Press Community Gaming License](https://darringtonpress.com/license).
-
-Daggerheart is © Darrington Press, LLC.
-
-Code is MIT licensed.
+</div>
 
 ---
 
-Created by gruffled. Inspired by Daggerheart RPG.
+## ✨ Features
+
+- 🎲 **Encounter Builder** - Build balanced encounters with automatic battle point calculations
+- 📚 **Adversary Library** - Browse and search a comprehensive library of creatures
+- 🔍 **Smart Filtering** - Filter by tier and search by name, type, or attributes
+- ⚖️ **Difficulty Scaling** - Adjust encounters with easy/hard modes and damage boosts
+- 📊 **Visual Budget Tracking** - Real-time progress bars and budget displays
+- 🎨 **Modern UI** - Beautiful gradients, animations, and responsive design
+- 🔄 **Sort Options** - Organize adversaries by name or tier
+- ✅ **Type Safety** - Clean, maintainable React codebase with best practices
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- 🐳 Docker and Docker Compose
+- 📦 (Optional) Node.js v18+ if running without Docker
+
+### Installation
+
+```sh
+# Clone the repository
+git clone https://github.com/gruffled/ded.git
+cd ded
+
+# Start development server
+make dev
+```
+
+🎉 Open [http://localhost:5173](http://localhost:5173) and start building encounters!
+
+## 🛠️ Available Commands
+
+| Command        | Description                         | Port |
+| -------------- | ----------------------------------- | ---- |
+| `make dev`     | 🔥 Development mode with hot reload | 5173 |
+| `make prod`    | 🚀 Production build with Nginx      | 8080 |
+| `make down`    | 🛑 Stop all containers              | -    |
+| `make logs`    | 📋 View container logs              | -    |
+| `make restart` | 🔄 Restart development server       | -    |
+| `make clean`   | 🧹 Stop containers and cleanup      | -    |
+| `make help`    | ❓ Show all commands                | -    |
+
+### 💻 Running Without Docker
+
+```sh
+npm install    # Install dependencies
+npm run dev    # Start development server
+```
+
+## 📁 Project Structure
+
+```
+📦 daggerheart-encounter-designer
+├── 📂 public/              # Static assets and data
+│   └── adversaries.json    # Adversary database
+├── 📂 src/
+│   ├── 📂 components/      # React UI components
+│   ├── 📄 constants.js     # Game rules configuration
+│   ├── 📄 utils.js         # Business logic & calculations
+│   ├── 📄 hooks.js         # Custom React hooks
+│   ├── 📄 index.css        # Global styles & animations
+│   └── 📄 main.jsx         # Application entry point
+├── 📂 scripts/             # Data extraction utilities
+├── 🐳 Dockerfile           # Production build configuration
+├── 🐳 Dockerfile.dev       # Development configuration
+├── 📋 docker-compose.yml   # Container orchestration
+└── ⚙️ Makefile            # Convenience commands
+```
+
+## 🏗️ Architecture
+
+The codebase follows React best practices with clean separation of concerns:
+
+```
+🎨 Components     →  Pure UI presentation
+🔧 Utils          →  Business logic & calculations
+🪝 Custom Hooks   →  Reusable state management
+⚙️ Constants      →  Centralized configuration
+```
+
+**Key Design Principles:**
+
+- ✅ Separation of concerns - Logic separated from UI
+- ✅ Custom hooks - `useAdversaryData`, `useEncounter`
+- ✅ Pure functions - Testable utility functions
+- ✅ Centralized config - Game rules in one place
+
+## 🎨 Customization
+
+| What               | Where                     | How                      |
+| ------------------ | ------------------------- | ------------------------ |
+| 🎲 Add Adversaries | `public/adversaries.json` | Edit JSON data           |
+| 🎨 Change Colors   | `src/index.css`           | Modify CSS variables     |
+| ⚙️ Game Rules      | `src/constants.js`        | Update configuration     |
+| 🧮 Battle Points   | `src/utils.js`            | Modify calculation logic |
+
+## 🤝 Contributing
+
+Contributions are welcome! Here's how you can help:
+
+1. 🍴 Fork the repository
+2. 🌿 Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. 💾 Commit your changes (`git commit -m 'Add amazing feature'`)
+4. 📤 Push to the branch (`git push origin feature/amazing-feature`)
+5. 🎉 Open a Pull Request
+
+Please open an issue for bugs or feature requests.
+
+## 📜 License
+
+### Content License
+
+This work includes material taken from the **Daggerheart System Reference Document 1.0** by Darrington Press LLC, available at [daggerheart.com/srd](https://daggerheart.com/srd).
+
+This work is licensed under the [Darrington Press Community Gaming License](https://darringtonpress.com/license).
+
+**Daggerheart is © Darrington Press, LLC**
+
+### Code License
+
+Code is licensed under the MIT License.
+
+---
+
+<div align="center">
+
+**⚔️ Built with ❤️ for the Daggerheart community**
+
+Created by [gruffled](https://github.com/gruffled) • Inspired by Daggerheart RPG
+
+[Report Bug](https://github.com/gruffled/ded/issues) • [Request Feature](https://github.com/gruffled/ded/issues) • [Documentation](https://github.com/gruffled/ded)
+
+</div>
