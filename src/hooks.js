@@ -39,13 +39,14 @@ export const useEncounter = () => {
   const [encounter, setEncounter] = useState([]);
 
   const addAdversary = (adversary) => {
-    setEncounter((current) => [...current, adversary]);
+    setEncounter((current) => [
+      ...current,
+      { ...adversary, id: crypto.randomUUID() },
+    ]);
   };
 
-  const removeAdversary = (indexToRemove) => {
-    setEncounter((current) =>
-      current.filter((_, index) => index !== indexToRemove)
-    );
+  const removeAdversary = (id) => {
+    setEncounter((current) => current.filter((adv) => adv.id !== id));
   };
 
   const clearEncounter = () => {

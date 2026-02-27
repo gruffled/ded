@@ -18,7 +18,7 @@ function EncounterAdversary({ adversary, index, onRemove }) {
       <Button
         variant="outline-danger"
         size="sm"
-        onClick={() => onRemove(index)}
+        onClick={() => onRemove(adversary.id)}
       >
         Remove
       </Button>
