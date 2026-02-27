@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20-alpine AS builder
+FROM cgr.dev/chainguard/node:latest AS builder
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM nginx:alpine
+FROM cgr.dev/chainguard/nginx:latest
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
