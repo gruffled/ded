@@ -24,3 +24,16 @@ services:
       - "8080:80"
     profiles:
       - production
+
+  # Test runner
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      - NODE_ENV=test
+    user: "0:0"
+    entrypoint: ["npm"]
+    command: ["test"]
+    profiles:
+      - test
