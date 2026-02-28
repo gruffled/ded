@@ -4,6 +4,7 @@
 
 **Build balanced encounters for your Daggerheart adventures**
 
+[![CI](https://github.com/gruffled/ded/actions/workflows/ci.yml/badge.svg)](https://github.com/gruffled/ded/actions/workflows/ci.yml)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![React](https://img.shields.io/badge/React-19.1-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-7.1-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
@@ -27,6 +28,8 @@ A modern web-based encounter designer for the Daggerheart tabletop RPG system. C
 - 🎨 **Modern UI** - Beautiful gradients, animations, and responsive design
 - 🔄 **Sort Options** - Organize adversaries by name or tier
 - ✅ **Type Safety** - Clean, maintainable React codebase with best practices
+- 🧪 **Tested** - Comprehensive test suite with Vitest and Testing Library
+- 🚀 **CI/CD** - Automated testing and builds with GitHub Actions
 
 ## 🚀 Quick Start
 
@@ -50,21 +53,26 @@ make dev
 
 ## 🛠️ Available Commands
 
-| Command        | Description                         | Port |
-| -------------- | ----------------------------------- | ---- |
-| `make dev`     | 🔥 Development mode with hot reload | 5173 |
-| `make prod`    | 🚀 Production build with Nginx      | 8080 |
-| `make down`    | 🛑 Stop all containers              | -    |
-| `make logs`    | 📋 View container logs              | -    |
-| `make restart` | 🔄 Restart development server       | -    |
-| `make clean`   | 🧹 Stop containers and cleanup      | -    |
-| `make help`    | ❓ Show all commands                | -    |
+| Command           | Description                         | Port |
+| ----------------- | ----------------------------------- | ---- |
+| `make dev`        | 🔥 Development mode with hot reload | 5173 |
+| `make prod`       | 🚀 Production build with Nginx      | 8080 |
+| `make test`       | 🧪 Run test suite in container      | -    |
+| `make test-watch` | 👀 Run tests in watch mode          | -    |
+| `make lint`       | 🔍 Run ESLint                       | -    |
+| `make down`       | 🛑 Stop all containers              | -    |
+| `make logs`       | 📋 View container logs              | -    |
+| `make restart`    | 🔄 Restart development server       | -    |
+| `make clean`      | 🧹 Stop containers and cleanup      | -    |
+| `make help`       | ❓ Show all commands                | -    |
 
 ### 💻 Running Without Docker
 
 ```sh
-npm install    # Install dependencies
-npm run dev    # Start development server
+npm install       # Install dependencies
+npm run dev       # Start development server
+npm test          # Run tests
+npm run lint      # Run linter
 ```
 
 ## 📁 Project Structure
@@ -75,12 +83,15 @@ npm run dev    # Start development server
 │   └── adversaries.json    # Adversary database
 ├── 📂 src/
 │   ├── 📂 components/      # React UI components
+│   ├── � test/            # Test setup and utilities
 │   ├── 📄 constants.js     # Game rules configuration
 │   ├── 📄 utils.js         # Business logic & calculations
+│   ├── 📄 utils.test.js    # Unit tests for utilities
 │   ├── 📄 hooks.js         # Custom React hooks
 │   ├── 📄 index.css        # Global styles & animations
 │   └── 📄 main.jsx         # Application entry point
 ├── 📂 scripts/             # Data extraction utilities
+├── 📂 .github/workflows/   # CI/CD configuration
 ├── 🐳 Dockerfile           # Production build configuration
 ├── 🐳 Dockerfile.dev       # Development configuration
 ├── 📋 docker-compose.yml   # Container orchestration
@@ -104,6 +115,8 @@ The codebase follows React best practices with clean separation of concerns:
 - ✅ Custom hooks - `useAdversaryData`, `useEncounter`
 - ✅ Pure functions - Testable utility functions
 - ✅ Centralized config - Game rules in one place
+- ✅ Test coverage - Unit and component tests with Vitest
+- ✅ CI/CD pipeline - Automated testing on every push
 
 ## 🎨 Customization
 
