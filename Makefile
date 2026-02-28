@@ -65,4 +65,4 @@ test-watch:
 
 # Run linter in container
 lint:
-	sudo docker compose run --rm dev npm run lint
+	sudo docker compose run --rm --entrypoint /bin/sh dev -c "npm run lint"

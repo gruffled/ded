@@ -3,7 +3,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
 
-function EncounterAdversary({ adversary, index, onRemove }) {
+function EncounterAdversary({ adversary, onRemove }) {
   return (
     <ListGroup.Item className="d-flex justify-content-between align-items-center bg-dark text-light border-secondary">
       <div>

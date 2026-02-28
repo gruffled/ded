@@ -32,11 +32,10 @@ function EncounterList({ encounter, onRemove, onClear }) {
           </p>
         ) : (
           <ListGroup variant="flush">
-            {encounter.map((adv, index) => (
+            {encounter.map((adv) => (
               <EncounterAdversary
                 key={adv.id}
                 adversary={adv}
-                index={index}
                 onRemove={onRemove}
               />
             ))}
