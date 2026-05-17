@@ -7,11 +7,11 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - .:/app
+      - .:/app:Z
       - /app/node_modules
     environment:
       - NODE_ENV=development
-    user: "${UID:-1000}:${GID:-1000}"
+    user: "0:0"
     entrypoint: ["/bin/sh", "-c"]
     command: ["npm run dev -- --host 0.0.0.0"]
 
