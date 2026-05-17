@@ -2,6 +2,8 @@ import {
   TIER_THRESHOLDS,
   BUDGET_CONFIG,
   MAJOR_ADVERSARY_TYPES,
+  TIER_FILTER_RANGE,
+  SORT_OPTIONS,
 } from "./constants";
 
 /**
@@ -74,16 +76,15 @@ export const filterAndSortAdversaries = (
       adv.type.toLowerCase().includes(searchTermLower) ||
       `tier ${adv.tier}`.includes(searchTermLower);
 
-    const matchesTier = !filterByTier || Math.abs(adv.tier - partyTier) <= 1;
+    const matchesTier = !filterByTier || Math.abs(adv.tier - partyTier) <= TIER_FILTER_RANGE;
 
     return matchesSearch && matchesTier;
   });
 
   return filtered.sort((a, b) => {
-    if (sortBy === "name") {
+    if (sortBy === SORT_OPTIONS.NAME) {
       return a.name.localeCompare(b.name);
     }
-    // Sort by tier, then by name within same tier
     return a.tier !== b.tier ? a.tier - b.tier : a.name.localeCompare(b.name);
   });
 };

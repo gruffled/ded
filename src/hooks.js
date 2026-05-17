@@ -11,7 +11,7 @@ export const useAdversaryData = () => {
   useEffect(() => {
     const fetchAdversaries = async () => {
       try {
-        const response = await fetch("./adversaries.json");
+        const response = await fetch("/adversaries.json");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

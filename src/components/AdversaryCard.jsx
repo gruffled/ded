@@ -2,22 +2,20 @@ import React from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
+import { getAdjustedBattlePoints } from "../utils";
 
 function AdversaryCard({ adversary, partyTier, onAdd, onShowDetails }) {
   const tierDiff = adversary.tier - partyTier;
   let variant;
   if (tierDiff > 0) {
-    variant = "danger"; // Above party tier
+    variant = "danger";
   } else if (tierDiff < 0) {
-    variant = "warning"; // Below party tier
+    variant = "warning";
   } else {
-    variant = "primary"; // At party tier
+    variant = "primary";
   }
 
-  const adjustedBP =
-    adversary.tier < partyTier
-      ? Math.max(0, adversary.battle_points - 1)
-      : adversary.battle_points;
+  const adjustedBP = getAdjustedBattlePoints(adversary, partyTier);
 
   return (
     <ListGroup.Item className="d-flex justify-content-between align-items-center bg-dark text-light border-secondary">

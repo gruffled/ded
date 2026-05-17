@@ -3,6 +3,7 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { ADJUSTMENT_VALUES } from "../constants";
 
 function Controls({
   partySize,
@@ -31,7 +32,7 @@ function Controls({
             <Form.Control
               type="number"
               value={partySize}
-              onChange={(e) => setPartySize(parseInt(e.target.value) || 1)}
+              onChange={(e) => setPartySize(Math.max(1, parseInt(e.target.value) || 1))}
               min="1"
             />
           </Form.Group>
@@ -40,7 +41,7 @@ function Controls({
             <Form.Control
               type="number"
               value={partyLevel}
-              onChange={(e) => setPartyLevel(parseInt(e.target.value) || 1)}
+              onChange={(e) => setPartyLevel(Math.min(10, Math.max(1, parseInt(e.target.value) || 1)))}
               min="1"
               max="10"
             />
@@ -54,8 +55,8 @@ function Controls({
             id="adjustment-none"
             name="adjustment"
             label="Standard Difficulty"
-            value="none"
-            checked={adjustments === "none"}
+            value={ADJUSTMENT_VALUES.NONE}
+            checked={adjustments === ADJUSTMENT_VALUES.NONE}
             onChange={handleAdjustmentChange}
           />
           <Form.Check
@@ -63,8 +64,8 @@ function Controls({
             id="adjustment-easy"
             name="adjustment"
             label="Easier Fight (-1 BP)"
-            value="easy"
-            checked={adjustments === "easy"}
+            value={ADJUSTMENT_VALUES.EASY}
+            checked={adjustments === ADJUSTMENT_VALUES.EASY}
             onChange={handleAdjustmentChange}
           />
           <Form.Check
@@ -72,8 +73,8 @@ function Controls({
             id="adjustment-hard"
             name="adjustment"
             label="Harder Fight (+2 BP)"
-            value="hard"
-            checked={adjustments === "hard"}
+            value={ADJUSTMENT_VALUES.HARD}
+            checked={adjustments === ADJUSTMENT_VALUES.HARD}
             onChange={handleAdjustmentChange}
           />
           <Form.Check
@@ -81,8 +82,8 @@ function Controls({
             id="adjustment-damage"
             name="adjustment"
             label="Boost Adversary Damage (-2 BP)"
-            value="damage"
-            checked={adjustments === "damage"}
+            value={ADJUSTMENT_VALUES.DAMAGE}
+            checked={adjustments === ADJUSTMENT_VALUES.DAMAGE}
             onChange={handleAdjustmentChange}
           />
         </Form>

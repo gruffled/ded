@@ -4,57 +4,20 @@ import Badge from "react-bootstrap/Badge";
 import ListGroup from "react-bootstrap/ListGroup";
 
 function AdversaryModal({ adversary, onClose }) {
-  // Debug logs to inspect problematic values
-  if (adversary && adversary.thresholds) {
-    console.log("adversary.thresholds:", adversary.thresholds);
-    console.log("adversary.thresholds.major:", adversary.thresholds.major);
-    console.log("adversary.thresholds.severe:", adversary.thresholds.severe);
-  }
-  // Helper to guarantee only strings/numbers are rendered
-  const safeRender = (value) => {
-    if (typeof value === "string" || typeof value === "number") return value;
-    if (value === null || value === undefined) return "N/A";
-    return JSON.stringify(value);
-  };
   if (!adversary) return null;
 
-  // Helper to format potentially complex data fields
   const formatContent = (content) => {
+    if (content === null || content === undefined) return "N/A";
     if (Array.isArray(content)) return content.join(", ");
-    if (typeof content === "object" && content !== null) {
-      if (content.name && content.range && content.damage) {
-        return `${content.name}: ${content.range} ${content.damage}`;
-      }
+    if (typeof content === "object") {
       return Object.entries(content)
         .map(([key, value]) => `${key} ${value}`)
         .join(", ");
     }
-    return content || "N/A";
+    return content;
   };
 
-  let allFeatures = [];
-  if (Array.isArray(adversary.features)) {
-    allFeatures = adversary.features;
-  } else {
-    allFeatures = [
-      ...(adversary.features?.actions || []).map((f) => ({
-        ...f,
-        type: "Action",
-      })),
-      ...(adversary.features?.reactions || []).map((f) => ({
-        ...f,
-        type: "Reaction",
-      })),
-      ...(adversary.features?.passives || []).map((f) => ({
-        ...f,
-        type: "Passive",
-      })),
-      ...(adversary.fear_features || []).map((f) => ({
-        ...f,
-        type: "Fear Feature",
-      })),
-    ];
-  }
+  const allFeatures = adversary.features ?? [];
 
   return (
     <Modal show={!!adversary} onHide={onClose} size="lg" centered>
@@ -92,12 +55,8 @@ function AdversaryModal({ adversary, onClose }) {
           <ListGroup.Item className="bg-secondary text-light">
             <strong>Thresholds</strong>
             <br />
-            {adversary.thresholds &&
-            typeof adversary.thresholds === "object" &&
-            adversary.thresholds !== null
-              ? `${safeRender(
-                  formatContent(adversary.thresholds.major)
-                )} / ${safeRender(formatContent(adversary.thresholds.severe))}`
+            {adversary.thresholds
+              ? `${adversary.thresholds.major} / ${adversary.thresholds.severe}`
               : "N/A"}
           </ListGroup.Item>
           <ListGroup.Item className="bg-secondary text-light">
@@ -132,42 +91,21 @@ function AdversaryModal({ adversary, onClose }) {
         </div>
         {adversary.experience && (
           <div>
-            <strong>Experiences:</strong>
-            {Array.isArray(adversary.experience) ? (
-              <ul className="mb-2">
-                {adversary.experience.map((exp, idx) => (
-                  <li key={idx}>
-                    {typeof exp === "object" && exp !== null
-                      ? `${exp.name}${
-                          exp.modifier !== undefined
-                            ? ` (+${exp.modifier})`
-                            : ""
-                        }`
-                      : exp}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <span className="mb-2 d-block">
-                {typeof adversary.experience === "object" &&
-                adversary.experience !== null
-                  ? `${adversary.experience.name}${
-                      adversary.experience.modifier !== undefined
-                        ? ` (+${adversary.experience.modifier})`
-                        : ""
-                    }`
-                  : adversary.experience}
-              </span>
-            )}
+            <strong>Experience: </strong>
+            <span className="mb-2">
+              {adversary.experience.name}
+              {adversary.experience.modifier !== undefined &&
+                ` (+${adversary.experience.modifier})`}
+            </span>
           </div>
         )}
         {allFeatures.length > 0 && (
           <>
             <h5 className="mt-4">Features</h5>
             <ListGroup variant="flush">
-              {allFeatures.map((feature, index) => (
+              {allFeatures.map((feature) => (
                 <ListGroup.Item
-                  key={index}
+                  key={`${feature.name}-${feature.type}`}
                   className="bg-dark text-light border-secondary"
                   style={{
                     background: "linear-gradient(135deg, #0d1857ff 0%, #000218ff 100%)",

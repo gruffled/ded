@@ -11,7 +11,7 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
-    user: "0:0"
+    user: "${UID:-1000}:${GID:-1000}"
     entrypoint: ["/bin/sh", "-c"]
     command: ["npm run dev -- --host 0.0.0.0"]
 
@@ -32,7 +32,6 @@ services:
       dockerfile: Dockerfile.dev
     environment:
       - NODE_ENV=test
-    user: "0:0"
     entrypoint: ["npm"]
     command: ["test"]
     profiles:

@@ -8,10 +8,18 @@ export const TIER_THRESHOLDS = [
 
 export const MAJOR_ADVERSARY_TYPES = ["bruiser", "horde", "leader", "solo"];
 
+export const ADJUSTMENT_VALUES = {
+  NONE: "none",
+  EASY: "easy",
+  HARD: "hard",
+  DAMAGE: "damage",
+};
+
 export const BUDGET_CONFIG = {
   BASE_PER_PLAYER: 3,
   BASE_BONUS: 2,
   ADJUSTMENT: {
+    NONE: 0,
     EASY: -1,
     HARD: 2,
     DAMAGE: -2,
