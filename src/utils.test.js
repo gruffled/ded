@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { ADJUSTMENT_VALUES } from "./constants";
 import {
   getTier,
   getAdjustedBattlePoints,
@@ -52,7 +53,7 @@ describe("getAdjustedBattlePoints", () => {
 
 describe("calculateBudget", () => {
   it("should calculate base budget correctly", () => {
-    const result = calculateBudget([], 4, 1, "normal");
+    const result = calculateBudget([], 4, 1, ADJUSTMENT_VALUES.NONE);
     // BASE_PER_PLAYER (3) * 4 + BASE_BONUS (2) = 14
     expect(result.total).toBe(14);
     expect(result.spent).toBe(0);
@@ -64,7 +65,7 @@ describe("calculateBudget", () => {
       { tier: 1, battle_points: 3, type: "bruiser" },
       { tier: 1, battle_points: 2, type: "minion" },
     ];
-    const result = calculateBudget(encounter, 4, 1, "normal");
+    const result = calculateBudget(encounter, 4, 1, ADJUSTMENT_VALUES.NONE);
     expect(result.spent).toBe(5);
     expect(result.remaining).toBe(9);
   });
@@ -75,7 +76,7 @@ describe("calculateBudget", () => {
       { tier: 1, battle_points: 8, type: "Solo" },
     ];
     // Multiple solos reduce budget by 2
-    const result = calculateBudget(encounter, 4, 1, "normal");
+    const result = calculateBudget(encounter, 4, 1, ADJUSTMENT_VALUES.NONE);
     expect(result.total).toBe(12); // 14 base - 2 penalty
     expect(result.spent).toBe(16);
   });
@@ -86,7 +87,7 @@ describe("calculateBudget", () => {
       { tier: 1, battle_points: 2, type: "standard" },
     ];
     // No major types (bruiser, horde, leader, solo) adds +1 to budget
-    const result = calculateBudget(encounter, 4, 1, "normal");
+    const result = calculateBudget(encounter, 4, 1, ADJUSTMENT_VALUES.NONE);
     expect(result.total).toBe(15); // 14 base + 1 bonus
   });
 });

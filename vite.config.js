@@ -5,9 +5,8 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
-    // This is the fix for WSL
     watch: {
-      usePolling: true,
+      usePolling: process.env.VITE_USE_POLLING === "true",
     },
   },
   test: {

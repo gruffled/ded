@@ -14,6 +14,7 @@ import Footer from "./Footer";
 // Import custom hooks and utilities
 import { useAdversaryData, useEncounter } from "../hooks";
 import { getTier, calculateBudget, filterAndSortAdversaries } from "../utils";
+import { ADJUSTMENT_VALUES, SORT_OPTIONS } from "../constants";
 
 function App() {
   // --- Data Loading ---
@@ -26,12 +27,12 @@ function App() {
   // --- Party Configuration State ---
   const [partySize, setPartySize] = useState(4);
   const [partyLevel, setPartyLevel] = useState(1);
-  const [adjustments, setAdjustments] = useState("none");
+  const [adjustments, setAdjustments] = useState(ADJUSTMENT_VALUES.NONE);
 
   // --- UI State ---
   const [searchTerm, setSearchTerm] = useState("");
   const [filterByTier, setFilterByTier] = useState(false);
-  const [sortBy, setSortBy] = useState("name");
+  const [sortBy, setSortBy] = useState(SORT_OPTIONS.NAME);
   const [selectedAdversary, setSelectedAdversary] = useState(null);
 
   // --- Computed Values ---

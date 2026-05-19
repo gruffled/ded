@@ -7,7 +7,7 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - .:/app
+      - .:/app:Z
       - /app/node_modules
     environment:
       - NODE_ENV=development
@@ -32,7 +32,6 @@ services:
       dockerfile: Dockerfile.dev
     environment:
       - NODE_ENV=test
-    user: "0:0"
     entrypoint: ["npm"]
     command: ["test"]
     profiles:

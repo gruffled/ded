@@ -3,6 +3,7 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import ListGroup from "react-bootstrap/ListGroup";
 import AdversaryCard from "./AdversaryCard";
+import { SORT_OPTIONS } from "../constants";
 
 function AdversaryLibrary({
   adversaries,
@@ -47,8 +48,8 @@ function AdversaryLibrary({
               onChange={(e) => setSortBy(e.target.value)}
               size="sm"
             >
-              <option value="name">Name (A-Z)</option>
-              <option value="tier">Tier</option>
+              <option value={SORT_OPTIONS.NAME}>Name (A-Z)</option>
+              <option value={SORT_OPTIONS.TIER}>Tier</option>
             </Form.Select>
           </Form.Group>
           <Form.Check
@@ -67,7 +68,7 @@ function AdversaryLibrary({
             <ListGroup variant="flush">
               {adversaries.map((adv) => (
                 <AdversaryCard
-                  key={adv.name}
+                  key={`${adv.name}-${adv.tier}`}
                   adversary={adv}
                   partyTier={partyTier}
                   onAdd={onAdd}

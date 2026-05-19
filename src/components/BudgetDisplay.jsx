@@ -8,7 +8,7 @@ function BudgetDisplay({ budget, partyTier }) {
   const remainingColor = budget.remaining < 0 ? "text-danger" : "text-success";
   const percentage = Math.min((budget.spent / budget.total) * 100, 100);
   const progressVariant =
-    percentage > 100 ? "danger" : percentage > 80 ? "warning" : "primary";
+    budget.remaining < 0 ? "danger" : percentage > 80 ? "warning" : "primary";
 
   return (
     <Card bg="secondary" text="light" className="shadow-lg">
