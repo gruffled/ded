@@ -1,5 +1,7 @@
-# Build stage
-FROM cgr.dev/chainguard/node:latest AS builder
+# Build stage — always run on the build host's native arch.
+# The output is static HTML/JS/CSS so the arch of the builder is
+# irrelevant. This avoids QEMU emulation when buildx targets arm64.
+FROM --platform=$BUILDPLATFORM cgr.dev/chainguard/node:latest AS builder
 
 WORKDIR /app
 
