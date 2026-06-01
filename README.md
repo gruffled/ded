@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚔️ Daggerheart Encounter Designer
+# ⚔️ Encounter Designer for Daggerheart
 
 **Build balanced encounters for your Daggerheart adventures**
 
@@ -141,17 +141,15 @@ Please open an issue for bugs or feature requests.
 
 ## 📜 License
 
-### Content License
-
-This work includes material taken from the **Daggerheart System Reference Document 1.0** by Darrington Press LLC, available at [daggerheart.com/srd](https://daggerheart.com/srd).
-
-This work is licensed under the [Darrington Press Community Gaming License](https://darringtonpress.com/license).
-
-**Daggerheart is © Darrington Press, LLC**
-
 ### Code License
 
-Code is licensed under the MIT License.
+The code in this repository is released under the [MIT License](LICENSE).
+
+### Content License
+
+This work includes material taken from the **Daggerheart System Reference Document 1.0** by Darrington Press LLC, available at [daggerheart.com/srd](https://daggerheart.com/srd), and is licensed under the [Darrington Press Community Gaming License](https://darringtonpress.com/license).
+
+**Daggerheart is © Darrington Press, LLC.** This project is an unofficial, fan-made tool and is not affiliated with, endorsed, or sponsored by Darrington Press.
 
 ---
 
