@@ -8,6 +8,21 @@ export const TIER_THRESHOLDS = [
 
 export const MAJOR_ADVERSARY_TYPES = ["bruiser", "horde", "leader", "solo"];
 
+// Battle Point costs from Daggerheart SRD 2.0, p. 94.
+// Minions are handled as party-sized groups in calculateBudget().
+export const BATTLE_POINTS_BY_TYPE = {
+  minion: 1,
+  social: 1,
+  support: 1,
+  horde: 2,
+  ranged: 2,
+  skulk: 2,
+  standard: 2,
+  leader: 3,
+  bruiser: 4,
+  solo: 5,
+};
+
 export const ADJUSTMENT_VALUES = {
   NONE: "none",
   EASY: "easy",
@@ -26,6 +41,7 @@ export const BUDGET_CONFIG = {
   },
   DYNAMIC: {
     MULTIPLE_SOLOS: -2,
+    LOWER_TIER: 1,
     NO_MAJOR_TYPES: 1,
   },
 };

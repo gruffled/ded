@@ -64,7 +64,7 @@ describe("AdversaryCard", () => {
     expect(screen.getByText("T3")).toHaveClass("bg-danger");
   });
 
-  it("shows reduced BP when adversary is below party tier", () => {
+  it("shows the SRD cost and marks minions as party-sized groups", () => {
     render(
       <AdversaryCard
         adversary={baseAdversary}
@@ -73,8 +73,7 @@ describe("AdversaryCard", () => {
         onShowDetails={vi.fn()}
       />
     );
-    expect(screen.getByText(/BP: 0/)).toBeInTheDocument();
-    expect(screen.getByText(/\(1\)/)).toBeInTheDocument();
+    expect(screen.getByText(/BP: 1\/group/)).toBeInTheDocument();
   });
 
   it("calls onAdd when Add button is clicked", async () => {

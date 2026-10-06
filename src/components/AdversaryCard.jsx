@@ -2,7 +2,7 @@ import React from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
-import { getAdjustedBattlePoints } from "../utils";
+import { getBattlePointCost } from "../utils";
 
 function AdversaryCard({ adversary, partyTier, onAdd, onShowDetails }) {
   const tierDiff = adversary.tier - partyTier;
@@ -15,7 +15,11 @@ function AdversaryCard({ adversary, partyTier, onAdd, onShowDetails }) {
     variant = "primary";
   }
 
-  const adjustedBP = getAdjustedBattlePoints(adversary, partyTier);
+  const battlePointCost = getBattlePointCost(adversary);
+  const battlePointLabel =
+    adversary.type.toLowerCase() === "minion"
+      ? `${battlePointCost}/group`
+      : battlePointCost;
 
   return (
     <ListGroup.Item className="d-flex justify-content-between align-items-center bg-dark text-light border-secondary">
@@ -32,9 +36,7 @@ function AdversaryCard({ adversary, partyTier, onAdd, onShowDetails }) {
           <span className="mx-2">|</span>
           HP: {adversary.hp}
           <span className="mx-2">|</span>
-          BP: {adjustedBP}{" "}
-          {adjustedBP !== adversary.battle_points &&
-            `(${adversary.battle_points})`}
+          BP: {battlePointLabel}
         </div>
       </div>
       <Button

@@ -3,7 +3,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
 
-function EncounterAdversary({ adversary, onRemove }) {
+function EncounterAdversary({ adversary, quantity = 1, onRemove }) {
   return (
     <ListGroup.Item className="d-flex justify-content-between align-items-center bg-dark text-light border-secondary">
       <div>
@@ -13,6 +13,11 @@ function EncounterAdversary({ adversary, onRemove }) {
             T{adversary.tier}
           </Badge>
           {adversary.type}
+          {quantity > 1 && (
+            <Badge pill bg="info" text="dark" className="ms-2">
+              ×{quantity}
+            </Badge>
+          )}
         </div>
       </div>
       <Button
@@ -20,7 +25,7 @@ function EncounterAdversary({ adversary, onRemove }) {
         size="sm"
         onClick={() => onRemove(adversary.id)}
       >
-        Remove
+        {quantity > 1 ? "Remove One" : "Remove"}
       </Button>
     </ListGroup.Item>
   );

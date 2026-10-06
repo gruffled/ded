@@ -1,68 +1,61 @@
-.PHONY: help dev prod build-dev build-prod up down logs clean restart test test-watch lint
+.PHONY: help dev prod build-dev build-prod up down logs clean restart test test-data test-watch lint
 
-# Default target
+CONTAINER_ENGINE ?= podman
+DEV_IMAGE ?= daggerheart-designer-dev
+PROD_IMAGE ?= daggerheart-designer
+DEV_CONTAINER ?= daggerheart-designer-dev
+PROD_CONTAINER ?= daggerheart-designer-prod
+
 help:
 	@echo "Available commands:"
-	@echo "  make dev          - Start development server with hot reload (port 5173)"
-	@echo "  make prod         - Start production server with nginx (port 8080)"
-	@echo "  make test         - Run tests in container"
-	@echo "  make test-watch   - Run tests in watch mode in container"
-	@echo "  make lint         - Run linter in container"
-	@echo "  make build-dev    - Build development Docker image"
-	@echo "  make build-prod   - Build production Docker image"
-	@echo "  make up           - Start development server (alias for dev)"
-	@echo "  make down         - Stop and remove containers"
-	@echo "  make logs         - Show container logs"
-	@echo "  make restart      - Restart development server"
-	@echo "  make clean        - Stop containers and remove images"
+	@echo "  make dev          - Build and start the development server (port 5173)"
+	@echo "  make prod         - Build and start the production server (port 8080)"
+	@echo "  make test         - Run JavaScript tests in a container"
+	@echo "  make test-data    - Run SRD extractor/data regression tests"
+	@echo "  make test-watch   - Run tests in watch mode in a container"
+	@echo "  make lint         - Run ESLint in a container"
+	@echo "  make build-dev    - Build the development image"
+	@echo "  make build-prod   - Build the production image"
+	@echo "  make down         - Stop and remove app containers"
+	@echo "  make logs         - Follow development container logs"
+	@echo "  make restart      - Restart the development server"
+	@echo "  make clean        - Stop containers and remove project images"
 
-# Start development server
-dev:
-	sudo docker compose up dev
+dev: build-dev
+	$(CONTAINER_ENGINE) run --rm --name $(DEV_CONTAINER) --publish 5173:5173 \
+		--volume "$(CURDIR):/app:Z" --volume /app/node_modules \
+		--env NODE_ENV=development $(DEV_IMAGE)
 
-# Start production server
-prod:
-	sudo docker compose --profile production up prod
+prod: build-prod
+	$(CONTAINER_ENGINE) run --rm --name $(PROD_CONTAINER) --publish 8080:80 $(PROD_IMAGE)
 
-# Build development image
 build-dev:
-	sudo docker compose build dev
+	$(CONTAINER_ENGINE) build --tag $(DEV_IMAGE) --file Dockerfile.dev .
 
-# Build production image
 build-prod:
-	sudo docker compose --profile production build prod
+	$(CONTAINER_ENGINE) build --tag $(PROD_IMAGE) --file Dockerfile .
 
-# Alias for dev
 up: dev
 
-# Stop containers
 down:
-	sudo docker compose down
+	-$(CONTAINER_ENGINE) rm --force $(DEV_CONTAINER) $(PROD_CONTAINER)
 
-# Show logs
 logs:
-	sudo docker compose logs -f
+	$(CONTAINER_ENGINE) logs --follow $(DEV_CONTAINER)
 
-# Restart development server
-restart:
-	sudo docker compose restart dev
+restart: down dev
 
-# Clean up containers and images
-clean:
-	sudo docker compose down
-	sudo docker compose --profile production down
-	sudo docker compose --profile test down
-	sudo docker image prune -f
+clean: down
+	-$(CONTAINER_ENGINE) rmi $(DEV_IMAGE) $(PROD_IMAGE)
 
-# Run tests in container  
-test:
-	sudo docker compose --profile test build --no-cache test
-	sudo docker compose --profile test run --rm test
+test: build-dev
+	$(CONTAINER_ENGINE) run --rm --env NODE_ENV=test $(DEV_IMAGE) test
 
-# Run tests in watch mode
-test-watch:
-	sudo docker compose --profile test run --rm test test:watch
+test-data:
+	python3 -m unittest discover scripts -p 'test_*.py'
 
-# Run linter in container
-lint:
-	sudo docker compose run --rm --entrypoint /bin/sh dev -c "npm run lint"
+test-watch: build-dev
+	$(CONTAINER_ENGINE) run --rm --interactive --tty --env NODE_ENV=test $(DEV_IMAGE) run test:watch
+
+lint: build-dev
+	$(CONTAINER_ENGINE) run --rm $(DEV_IMAGE) run lint

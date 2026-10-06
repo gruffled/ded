@@ -1,6 +1,7 @@
 import {
   TIER_THRESHOLDS,
   BUDGET_CONFIG,
+  BATTLE_POINTS_BY_TYPE,
   MAJOR_ADVERSARY_TYPES,
   TIER_FILTER_RANGE,
   SORT_OPTIONS,
@@ -14,12 +15,27 @@ export const getTier = (level) => {
   return threshold ? threshold.tier : 4;
 };
 
+const getAdversaryType = (adversary) =>
+  String(adversary.type ?? "").toLowerCase();
+
 /**
- * Calculate adjusted battle points for an adversary
+ * Calculate the Battle Point cost for one adversary entry.
+ *
+ * SRD 2.0 defines costs by adversary type. The data field is retained as a
+ * fallback while the new adversary dataset is being migrated.
  */
-export const getAdjustedBattlePoints = (adversary, partyTier) => {
-  const basePoints = adversary.battle_points;
-  return adversary.tier < partyTier ? Math.max(0, basePoints - 1) : basePoints;
+export const getBattlePointCost = (adversary) => {
+  const typeCost = BATTLE_POINTS_BY_TYPE[getAdversaryType(adversary)];
+  return typeCost ?? (Number(adversary.battle_points) || 0);
+};
+
+/**
+ * Backwards-compatible name used by the card component.
+ * Lower-tier adversaries no longer have their individual cost reduced; SRD
+ * 2.0 applies a single +1 budget adjustment to an encounter instead.
+ */
+export const getAdjustedBattlePoints = (adversary) => {
+  return getBattlePointCost(adversary);
 };
 
 /**
@@ -32,15 +48,28 @@ export const calculateBudget = (
   adjustments
 ) => {
   let currentCost = 0;
+  let minionCount = 0;
   let soloCount = 0;
   let hasMajorType = false;
+  let hasLowerTier = false;
 
   encounter.forEach((adv) => {
-    currentCost += getAdjustedBattlePoints(adv, partyTier);
-    if (adv.type.toLowerCase() === "solo") soloCount++;
-    if (MAJOR_ADVERSARY_TYPES.includes(adv.type.toLowerCase()))
+    const type = getAdversaryType(adv);
+    if (type === "minion") {
+      minionCount++;
+    } else {
+      currentCost += getBattlePointCost(adv);
+    }
+    if (type === "solo") soloCount++;
+    if (MAJOR_ADVERSARY_TYPES.includes(type))
       hasMajorType = true;
+    if (adv.tier < partyTier) hasLowerTier = true;
   });
+
+  // Minions cost 1 BP for each group equal to the party size.
+  if (minionCount > 0) {
+    currentCost += Math.ceil(minionCount / Math.max(1, partySize));
+  }
 
   const baseBudget =
     BUDGET_CONFIG.BASE_PER_PLAYER * partySize + BUDGET_CONFIG.BASE_BONUS;
@@ -50,6 +79,7 @@ export const calculateBudget = (
 
   let dynamicAdjustment = 0;
   if (soloCount >= 2) dynamicAdjustment += BUDGET_CONFIG.DYNAMIC.MULTIPLE_SOLOS;
+  if (hasLowerTier) dynamicAdjustment += BUDGET_CONFIG.DYNAMIC.LOWER_TIER;
   if (encounter.length > 0 && !hasMajorType)
     dynamicAdjustment += BUDGET_CONFIG.DYNAMIC.NO_MAJOR_TYPES;
 

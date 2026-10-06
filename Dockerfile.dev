@@ -24,5 +24,7 @@ USER node
 # Expose Vite dev server port
 EXPOSE 5173
 
-# Start development server
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# The Chainguard Node image supplies node as its entrypoint. Set npm
+# explicitly so `podman run ... test` and the Makefile targets work as expected.
+ENTRYPOINT ["npm"]
+CMD ["run", "dev", "--", "--host", "0.0.0.0"]

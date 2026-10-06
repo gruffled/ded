@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run SRD extractor/data tests
+        run: python3 -m unittest discover scripts -p 'test_*.py'
+
       - name: Run linter
         run: npm run lint
 

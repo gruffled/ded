@@ -33,6 +33,37 @@ export const useAdversaryData = () => {
 };
 
 /**
+ * Hook to fetch SRD 2.0 environment data.
+ */
+export const useEnvironmentData = () => {
+  const [allEnvironments, setAllEnvironments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchEnvironments = async () => {
+      try {
+        const response = await fetch("/environments.json");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        setAllEnvironments(await response.json());
+      } catch (e) {
+        console.error("Failed to fetch environment data:", e);
+        setError(
+          "Could not load environment data. Please make sure 'environments.json' is in the public directory."
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchEnvironments();
+  }, []);
+
+  return { allEnvironments, isLoading, error };
+};
+
+/**
  * Hook to manage encounter state
  */
 export const useEncounter = () => {
