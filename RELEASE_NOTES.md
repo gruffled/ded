@@ -1,6 +1,6 @@
 # Hope & Fear — Release Notes
 
-## Unreleased — SRD 2.0 migration
+## v0.2.0 — 2026-10-06
 
 - Imported 264 SRD 2.0 adversaries and 47 environments.
 - Added SRD 2.0 Battle Point rules, Horde metadata, and grouped minion handling.
