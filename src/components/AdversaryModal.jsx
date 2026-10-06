@@ -18,6 +18,13 @@ function AdversaryModal({ adversary, onClose }) {
   };
 
   const allFeatures = adversary.features ?? [];
+  const experiences = Array.isArray(adversary.experience)
+    ? adversary.experience
+    : adversary.experience
+    ? [adversary.experience]
+    : [];
+  const formatThreshold = (value) =>
+    value === null || value === undefined ? "—" : value;
 
   return (
     <Modal show={!!adversary} onHide={onClose} size="lg" centered>
@@ -56,7 +63,9 @@ function AdversaryModal({ adversary, onClose }) {
             <strong>Thresholds</strong>
             <br />
             {adversary.thresholds
-              ? `${adversary.thresholds.major} / ${adversary.thresholds.severe}`
+              ? `${formatThreshold(adversary.thresholds.major)} / ${formatThreshold(
+                  adversary.thresholds.severe
+                )}`
               : "N/A"}
           </ListGroup.Item>
           <ListGroup.Item className="bg-secondary text-light">
@@ -89,14 +98,25 @@ function AdversaryModal({ adversary, onClose }) {
             )}
           </div>
         </div>
-        {adversary.experience && (
+        {experiences.length > 0 && (
           <div>
             <strong>Experience: </strong>
             <span className="mb-2">
-              {adversary.experience.name}
-              {adversary.experience.modifier !== undefined &&
-                ` (+${adversary.experience.modifier})`}
+              {experiences.map((experience, index) => (
+                <React.Fragment key={`${experience.name}-${index}`}>
+                  {index > 0 && ", "}
+                  {experience.name}
+                  {experience.modifier !== undefined &&
+                    ` (+${experience.modifier})`}
+                </React.Fragment>
+              ))}
             </span>
+          </div>
+        )}
+        {adversary.creatures_per_hp && (
+          <div className="mb-2">
+            <strong>Horde Size: </strong>
+            {adversary.creatures_per_hp} creature(s) per HP
           </div>
         )}
         {allFeatures.length > 0 && (
@@ -127,7 +147,16 @@ function AdversaryModal({ adversary, onClose }) {
                       {feature.type}
                     </Badge>
                   </div>
-                  <small>{feature.description}</small>
+                    <small>{feature.description}</small>
+                    {feature.costs && (
+                      <div className="small text-warning mt-1">
+                        Cost: {feature.costs.fear ? `${feature.costs.fear} Fear` : ""}
+                        {feature.costs.fear && feature.costs.stress ? " + " : ""}
+                        {feature.costs.stress
+                          ? `${feature.costs.stress} Stress`
+                          : ""}
+                      </div>
+                    )}
                 </ListGroup.Item>
               ))}
             </ListGroup>

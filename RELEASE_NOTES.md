@@ -1,4 +1,15 @@
-# Hope & Fear — v0.1.0
+# Hope & Fear — Release Notes
+
+## Unreleased — SRD 2.0 migration
+
+- Imported 264 SRD 2.0 adversaries and 47 environments.
+- Added SRD 2.0 Battle Point rules, Horde metadata, and grouped minion handling.
+- Added active environment scene context without affecting Battle Point budgets.
+- Added extractor and bundled-data regression tests.
+- Switched the documented container workflow to Podman-first commands.
+- 37 JavaScript tests passing, plus Python extractor/data regression coverage.
+
+## v0.1.0
 
 First public release of the Encounter Designer for Daggerheart: a web-based
 tool for building balanced encounters for the Daggerheart tabletop RPG.
@@ -47,8 +58,8 @@ npm install && npm run dev
 
 ## Acknowledgements
 
-This work includes material from the **Daggerheart System Reference Document 1.0**
-by Darrington Press LLC ([daggerheart.com/srd](https://daggerheart.com/srd)), used
+This work includes material from the **Daggerheart System Reference Document 2.0**
+by Critical Role LLC ([daggerheart.com/srd](https://daggerheart.com/srd)), used
 under the [Darrington Press Community Gaming License](https://darringtonpress.com/license).
 
 Daggerheart is © Darrington Press, LLC. This project is an unofficial, fan-made

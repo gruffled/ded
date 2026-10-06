@@ -35,7 +35,7 @@ A modern web-based encounter designer for the Daggerheart tabletop RPG system. C
 
 ### Prerequisites
 
-- 🐳 Docker and Docker Compose
+- 📦 Podman (the Makefile uses rootless Podman commands)
 - 📦 (Optional) Node.js v18+ if running without Docker
 
 ### Installation
@@ -45,7 +45,7 @@ A modern web-based encounter designer for the Daggerheart tabletop RPG system. C
 git clone https://github.com/gruffled/ded.git
 cd ded
 
-# Start development server
+# Start development server in a Podman container
 make dev
 ```
 
@@ -58,6 +58,7 @@ make dev
 | `make dev`        | 🔥 Development mode with hot reload | 5173 |
 | `make prod`       | 🚀 Production build with Nginx      | 8080 |
 | `make test`       | 🧪 Run test suite in container      | -    |
+| `make test-data`  | 🧪 Run SRD extractor/data tests     | -    |
 | `make test-watch` | 👀 Run tests in watch mode          | -    |
 | `make lint`       | 🔍 Run ESLint                       | -    |
 | `make down`       | 🛑 Stop all containers              | -    |
@@ -66,7 +67,7 @@ make dev
 | `make clean`      | 🧹 Stop containers and cleanup      | -    |
 | `make help`       | ❓ Show all commands                | -    |
 
-### 💻 Running Without Docker
+### 💻 Running Without Podman
 
 ```sh
 npm install       # Install dependencies
@@ -75,12 +76,38 @@ npm test          # Run tests
 npm run lint      # Run linter
 ```
 
+The Makefile can use another OCI-compatible engine by overriding
+`CONTAINER_ENGINE`, for example `make CONTAINER_ENGINE=docker test`.
+
+### Refreshing adversary data
+
+The bundled adversary library is generated from the Daggerheart SRD PDF. To
+refresh it after receiving a newer SRD, run:
+
+```sh
+python3 scripts/adversary_extractor.py /path/to/DH_SRD.pdf public/adversaries.json
+```
+
+The extractor validates tiers, types, core statistics, and Horde metadata
+before writing the JSON file. Run `make test-data` to exercise the parser and
+validate the bundled SRD data shape. Review generated stat blocks after import.
+
+The same extractor can import the SRD 2.0 environment catalogue:
+
+```sh
+python3 scripts/adversary_extractor.py /path/to/DH_SRD.pdf public/environments.json --kind environments
+```
+
+Environments are kept separate from adversaries because they are encounter
+context and do not spend Battle Points.
+
 ## 📁 Project Structure
 
 ```
 📦 daggerheart-encounter-designer
 ├── 📂 public/              # Static assets and data
-│   └── adversaries.json    # Adversary database
+│   ├── adversaries.json    # Adversary database
+│   └── environments.json   # Environment database
 ├── 📂 src/
 │   ├── 📂 components/      # React UI components
 │   ├── � test/            # Test setup and utilities
@@ -147,7 +174,7 @@ The code in this repository is released under the [MIT License](LICENSE).
 
 ### Content License
 
-This work includes material taken from the **Daggerheart System Reference Document 1.0** by Darrington Press LLC, available at [daggerheart.com/srd](https://daggerheart.com/srd), and is licensed under the [Darrington Press Community Gaming License](https://darringtonpress.com/license).
+This work includes material taken from the **Daggerheart System Reference Document 2.0** by Critical Role LLC, available at [daggerheart.com/srd](https://daggerheart.com/srd), and is licensed under the [Darrington Press Community Gaming License](https://darringtonpress.com/license).
 
 **Daggerheart is © Darrington Press, LLC.** This project is an unofficial, fan-made tool and is not affiliated with, endorsed, or sponsored by Darrington Press.
 

@@ -2,23 +2,33 @@ import React, { useState, useMemo } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 
 // Import custom components
 import Controls from "./Controls";
 import BudgetDisplay from "./BudgetDisplay";
 import AdversaryLibrary from "./AdversaryLibrary";
+import EnvironmentLibrary from "./EnvironmentLibrary";
+import ActiveEnvironment from "./ActiveEnvironment";
 import EncounterList from "./EncounterList";
 import AdversaryModal from "./AdversaryModal";
+import EnvironmentModal from "./EnvironmentModal";
 import Footer from "./Footer";
 
 // Import custom hooks and utilities
-import { useAdversaryData, useEncounter } from "../hooks";
+import { useAdversaryData, useEnvironmentData, useEncounter } from "../hooks";
 import { getTier, calculateBudget, filterAndSortAdversaries } from "../utils";
 import { ADJUSTMENT_VALUES, SORT_OPTIONS } from "../constants";
 
 function App() {
   // --- Data Loading ---
   const { allAdversaries, isLoading, error } = useAdversaryData();
+  const {
+    allEnvironments,
+    isLoading: environmentsLoading,
+    error: environmentsError,
+  } = useEnvironmentData();
 
   // --- Encounter Management ---
   const { encounter, addAdversary, removeAdversary, clearEncounter } =
@@ -34,6 +44,9 @@ function App() {
   const [filterByTier, setFilterByTier] = useState(false);
   const [sortBy, setSortBy] = useState(SORT_OPTIONS.NAME);
   const [selectedAdversary, setSelectedAdversary] = useState(null);
+  const [selectedEnvironment, setSelectedEnvironment] = useState(null);
+  const [activeEnvironment, setActiveEnvironment] = useState(null);
+  const [libraryMode, setLibraryMode] = useState("adversaries");
 
   // --- Computed Values ---
   const partyTier = useMemo(() => getTier(partyLevel), [partyLevel]);
@@ -77,6 +90,13 @@ function App() {
               setAdjustments={setAdjustments}
             />
             <BudgetDisplay budget={budget} partyTier={partyTier} />
+            <ActiveEnvironment
+              environment={activeEnvironment}
+              partyTier={partyTier}
+              onShowDetails={setSelectedEnvironment}
+              onReplace={() => setLibraryMode("environments")}
+              onClear={() => setActiveEnvironment(null)}
+            />
             <EncounterList
               encounter={encounter}
               onRemove={removeAdversary}
@@ -85,25 +105,54 @@ function App() {
           </div>
         </Col>
         <Col lg={8}>
-          <AdversaryLibrary
-            adversaries={filteredAdversaries}
-            partyTier={partyTier}
-            onAdd={addAdversary}
-            onShowDetails={setSelectedAdversary}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            filterByTier={filterByTier}
-            setFilterByTier={setFilterByTier}
-            sortBy={sortBy}
-            setSortBy={setSortBy}
-            isLoading={isLoading}
-            error={error}
-          />
+          <ButtonGroup className="mb-3 w-100" aria-label="Library type">
+            <Button
+              variant={libraryMode === "adversaries" ? "primary" : "outline-primary"}
+              onClick={() => setLibraryMode("adversaries")}
+            >
+              Adversaries
+            </Button>
+            <Button
+              variant={libraryMode === "environments" ? "success" : "outline-success"}
+              onClick={() => setLibraryMode("environments")}
+            >
+              Environments
+            </Button>
+          </ButtonGroup>
+          {libraryMode === "adversaries" ? (
+            <AdversaryLibrary
+              adversaries={filteredAdversaries}
+              partyTier={partyTier}
+              onAdd={addAdversary}
+              onShowDetails={setSelectedAdversary}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              filterByTier={filterByTier}
+              setFilterByTier={setFilterByTier}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              isLoading={isLoading}
+              error={error}
+            />
+          ) : (
+            <EnvironmentLibrary
+              environments={allEnvironments}
+              activeEnvironment={activeEnvironment}
+              onUse={(environment) => setActiveEnvironment(environment)}
+              onShowDetails={setSelectedEnvironment}
+              isLoading={environmentsLoading}
+              error={environmentsError}
+            />
+          )}
         </Col>
       </Row>
       <AdversaryModal
         adversary={selectedAdversary}
         onClose={() => setSelectedAdversary(null)}
+      />
+      <EnvironmentModal
+        environment={selectedEnvironment}
+        onClose={() => setSelectedEnvironment(null)}
       />
       <Footer />
     </Container>

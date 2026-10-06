@@ -5,6 +5,17 @@ import Button from "react-bootstrap/Button";
 import EncounterAdversary from "./EncounterAdversary";
 
 function EncounterList({ encounter, onRemove, onClear }) {
+  const groupedEncounter = Object.values(
+    encounter.reduce((groups, adversary) => {
+      const key = `${adversary.name}-${adversary.tier}-${adversary.type}`;
+      if (!groups[key]) {
+        groups[key] = { adversary, quantity: 0 };
+      }
+      groups[key].quantity += 1;
+      return groups;
+    }, {})
+  );
+
   return (
     <Card
       bg="secondary"
@@ -32,10 +43,11 @@ function EncounterList({ encounter, onRemove, onClear }) {
           </p>
         ) : (
           <ListGroup variant="flush">
-            {encounter.map((adv) => (
+            {groupedEncounter.map(({ adversary, quantity }) => (
               <EncounterAdversary
-                key={adv.id}
-                adversary={adv}
+                key={adversary.id}
+                adversary={adversary}
+                quantity={quantity}
                 onRemove={onRemove}
               />
             ))}

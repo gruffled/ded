@@ -30,9 +30,9 @@ describe("getTier", () => {
 });
 
 describe("getAdjustedBattlePoints", () => {
-  it("should reduce battle points by 1 when adversary tier is below party tier", () => {
+  it("should use the type cost regardless of adversary tier", () => {
     const adversary = { tier: 1, battle_points: 5 };
-    expect(getAdjustedBattlePoints(adversary, 2)).toBe(4);
+    expect(getAdjustedBattlePoints(adversary, 2)).toBe(5);
   });
 
   it("should not reduce battle points when adversary tier equals party tier", () => {
@@ -70,6 +70,15 @@ describe("calculateBudget", () => {
     expect(result.remaining).toBe(9);
   });
 
+  it("should charge one point per party-sized group of minions", () => {
+    const encounter = Array.from({ length: 5 }, () => ({
+      tier: 1,
+      type: "Minion",
+    }));
+    const result = calculateBudget(encounter, 4, 1, ADJUSTMENT_VALUES.NONE);
+    expect(result.spent).toBe(2);
+  });
+
   it("should apply penalty for multiple solos", () => {
     const encounter = [
       { tier: 1, battle_points: 8, type: "solo" },
@@ -78,7 +87,7 @@ describe("calculateBudget", () => {
     // Multiple solos reduce budget by 2
     const result = calculateBudget(encounter, 4, 1, ADJUSTMENT_VALUES.NONE);
     expect(result.total).toBe(12); // 14 base - 2 penalty
-    expect(result.spent).toBe(16);
+    expect(result.spent).toBe(10);
   });
 
   it("should add bonus when encounter has no major types", () => {
@@ -89,6 +98,13 @@ describe("calculateBudget", () => {
     // No major types (bruiser, horde, leader, solo) adds +1 to budget
     const result = calculateBudget(encounter, 4, 1, ADJUSTMENT_VALUES.NONE);
     expect(result.total).toBe(15); // 14 base + 1 bonus
+  });
+
+  it("should add one budget point when using a lower-tier adversary", () => {
+    const encounter = [{ tier: 1, type: "Bruiser" }];
+    const result = calculateBudget(encounter, 4, 2, ADJUSTMENT_VALUES.NONE);
+    expect(result.total).toBe(15);
+    expect(result.spent).toBe(4);
   });
 });
 

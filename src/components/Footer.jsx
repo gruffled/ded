@@ -5,7 +5,7 @@ function Footer() {
     <footer className="mt-5 pt-4 border-top border-secondary text-center">
       <p className="text-light opacity-75 small mb-2">
         This work includes material taken from the Daggerheart System Reference
-        Document 1.0 by Darrington Press LLC, available at{" "}
+        Document 2.0 by Critical Role LLC, available at{" "}
         <a
           href="https://daggerheart.com/srd"
           target="_blank"
