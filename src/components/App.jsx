@@ -15,6 +15,7 @@ import EncounterList from "./EncounterList";
 import AdversaryModal from "./AdversaryModal";
 import EnvironmentModal from "./EnvironmentModal";
 import Footer from "./Footer";
+import CharacterBuilder from "./CharacterBuilder";
 
 // Import custom hooks and utilities
 import { useAdversaryData, useEnvironmentData, useEncounter } from "../hooks";
@@ -42,11 +43,13 @@ function App() {
   // --- UI State ---
   const [searchTerm, setSearchTerm] = useState("");
   const [filterByTier, setFilterByTier] = useState(false);
+  const [adversaryType, setAdversaryType] = useState("all");
   const [sortBy, setSortBy] = useState(SORT_OPTIONS.NAME);
   const [selectedAdversary, setSelectedAdversary] = useState(null);
   const [selectedEnvironment, setSelectedEnvironment] = useState(null);
   const [activeEnvironment, setActiveEnvironment] = useState(null);
   const [libraryMode, setLibraryMode] = useState("adversaries");
+  const [appMode, setAppMode] = useState("character");
 
   // --- Computed Values ---
   const partyTier = useMemo(() => getTier(partyLevel), [partyLevel]);
@@ -63,22 +66,43 @@ function App() {
         searchTerm,
         filterByTier,
         partyTier,
-        sortBy
+        sortBy,
+        adversaryType
       ),
-    [allAdversaries, searchTerm, filterByTier, partyTier, sortBy]
+    [allAdversaries, searchTerm, filterByTier, partyTier, sortBy, adversaryType]
+  );
+  const adversaryTypes = useMemo(
+    () => [...new Set(allAdversaries.map((adversary) => adversary.type))].sort((a, b) => a.localeCompare(b)),
+    [allAdversaries]
   );
   // --- Render ---
   return (
     <Container fluid className="text-light min-vh-100 p-4">
       <header className="mb-5 text-center">
         <h1 className="display-2 fw-bold mb-2 app-title">
-          ⚔️ Daggerheart Encounter Designer
+          ⚔️ Daggerheart Designer
         </h1>
         <p className="lead text-light opacity-75">
-          Build balanced encounters for your Daggerheart adventures
+          {appMode === "encounter"
+            ? "Build balanced encounters for your Daggerheart adventures"
+            : "Create and manage Daggerheart player characters"}
         </p>
       </header>
-      <Row>
+      <ButtonGroup className="mb-4 w-100" aria-label="Application mode">
+        <Button
+          variant={appMode === "character" ? "warning" : "outline-warning"}
+          onClick={() => setAppMode("character")}
+        >
+          Character Builder
+        </Button>
+        <Button
+          variant={appMode === "encounter" ? "primary" : "outline-primary"}
+          onClick={() => setAppMode("encounter")}
+        >
+          Encounter Builder
+        </Button>
+      </ButtonGroup>
+      {appMode === "character" ? <CharacterBuilder /> : <Row>
         <Col lg={4}>
           <div className="d-flex flex-column gap-4">
             <Controls
@@ -129,6 +153,9 @@ function App() {
               setSearchTerm={setSearchTerm}
               filterByTier={filterByTier}
               setFilterByTier={setFilterByTier}
+              adversaryType={adversaryType}
+              setAdversaryType={setAdversaryType}
+              adversaryTypes={adversaryTypes}
               sortBy={sortBy}
               setSortBy={setSortBy}
               isLoading={isLoading}
@@ -145,7 +172,7 @@ function App() {
             />
           )}
         </Col>
-      </Row>
+      </Row>}
       <AdversaryModal
         adversary={selectedAdversary}
         onClose={() => setSelectedAdversary(null)}

@@ -27,7 +27,7 @@ dev: build-dev
 		--env NODE_ENV=development $(DEV_IMAGE)
 
 prod: build-prod
-	$(CONTAINER_ENGINE) run --rm --name $(PROD_CONTAINER) --publish 8080:80 $(PROD_IMAGE)
+	$(CONTAINER_ENGINE) run --rm --name $(PROD_CONTAINER) --publish 8080:8080 $(PROD_IMAGE)
 
 build-dev:
 	$(CONTAINER_ENGINE) build --tag $(DEV_IMAGE) --file Dockerfile.dev .

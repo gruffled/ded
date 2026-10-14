@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚔️ Encounter Designer for Daggerheart
+# ⚔️ Daggerheart Designer
 
 **Build balanced encounters for your Daggerheart adventures**
 
@@ -10,7 +10,7 @@
 [![Vite](https://img.shields.io/badge/Vite-7.1-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-A modern web-based encounter designer for the Daggerheart tabletop RPG system. Create, manage, and balance encounters with an intuitive interface and powerful battle point calculator.
+A modern web-based character and encounter designer for the Daggerheart tabletop RPG system. Create player characters, manage encounters, and balance battles with an intuitive interface and powerful battle point calculator.
 
 [Quick Start](#-quick-start) • [Features](#-features) • [Documentation](#-project-structure) • [Contributing](#-contributing)
 
@@ -21,6 +21,9 @@ A modern web-based encounter designer for the Daggerheart tabletop RPG system. C
 ## ✨ Features
 
 - 🎲 **Encounter Builder** - Build balanced encounters with automatic battle point calculations
+- 🧙 **Character Builder** - Create level-1 characters with class, heritage, traits, equipment, and domain cards
+- 💾 **Character Files** - Save characters in the browser and import/export JSON backups
+- 🖨️ **Custom Character Printout** - Print a two-page sheet with an original, official-inspired character sheet and class-guide layout
 - 📚 **Adversary Library** - Browse and search a comprehensive library of creatures
 - 🔍 **Smart Filtering** - Filter by tier and search by name, type, or attributes
 - ⚖️ **Difficulty Scaling** - Adjust encounters with easy/hard modes and damage boosts
@@ -50,6 +53,10 @@ make dev
 ```
 
 🎉 Open [http://localhost:5173](http://localhost:5173) and start building encounters!
+
+The character print layout is an original template inspired by the information hierarchy of the official Daggerheart sheet references. It does not embed or modify the official PDFs, which keeps class and subclass content isolated and makes the text flow reliably:
+[Character Sheets and Guides](https://www.daggerheart.com/wp-content/uploads/2025/05/Character-Sheets-and-Guides-Daggerheart-Aug252026.pdf) and
+[High-Fantasy Character Guides and Sheets](https://www.daggerheart.com/wp-content/uploads/2026/08/CharacterGuidesAndSheetsTile_HF_2026-07-23.pdf).
 
 ## 🛠️ Available Commands
 
@@ -109,6 +116,8 @@ context and do not spend Battle Points.
 │   ├── adversaries.json    # Adversary database
 │   └── environments.json   # Environment database
 ├── 📂 src/
+│   ├── 📄 characterData.js  # Character creation reference data
+│   ├── 📄 characterUtils.js # Character validation and derived stats
 │   ├── 📂 components/      # React UI components
 │   ├── � test/            # Test setup and utilities
 │   ├── 📄 constants.js     # Game rules configuration

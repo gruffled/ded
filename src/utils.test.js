@@ -152,6 +152,29 @@ describe("filterAndSortAdversaries", () => {
     expect(result[2].name).toBe("Orc");
   });
 
+  it("should filter by adversary type", () => {
+    const result = filterAndSortAdversaries(
+      mockAdversaries,
+      "",
+      false,
+      2,
+      "name",
+      "leader",
+    );
+    expect(result).toHaveLength(0);
+
+    const minions = filterAndSortAdversaries(
+      mockAdversaries,
+      "",
+      false,
+      2,
+      "name",
+      "minion",
+    );
+    expect(minions).toHaveLength(1);
+    expect(minions[0].name).toBe("Goblin");
+  });
+
   it("should sort by tier by default", () => {
     const result = filterAndSortAdversaries(
       mockAdversaries,
