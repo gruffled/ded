@@ -13,6 +13,24 @@ export default defineConfig([
     },
   },
   {
+    files: ['cypress.config.js'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
+  {
+    files: ['cypress/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        beforeEach: 'readonly',
+        cy: 'readonly',
+        describe: 'readonly',
+        it: 'readonly',
+      },
+    },
+  },
+  {
     files: ['**/*.{js,jsx}'],
     extends: [
       js.configs.recommended,

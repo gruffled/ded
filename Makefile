@@ -1,4 +1,4 @@
-.PHONY: help dev prod build-dev build-prod up down logs clean restart test test-data test-watch lint
+.PHONY: help dev prod build-dev build-prod up down logs clean restart test test-data test-watch lint e2e
 
 CONTAINER_ENGINE ?= podman
 DEV_IMAGE ?= daggerheart-designer-dev
@@ -14,6 +14,7 @@ help:
 	@echo "  make test-data    - Run SRD extractor/data regression tests"
 	@echo "  make test-watch   - Run tests in watch mode in a container"
 	@echo "  make lint         - Run ESLint in a container"
+	@echo "  make e2e          - Run Cypress browser tests in containers"
 	@echo "  make build-dev    - Build the development image"
 	@echo "  make build-prod   - Build the production image"
 	@echo "  make down         - Stop and remove app containers"
@@ -59,3 +60,6 @@ test-watch: build-dev
 
 lint: build-dev
 	$(CONTAINER_ENGINE) run --rm $(DEV_IMAGE) run lint
+
+e2e: build-prod
+	sh scripts/run-e2e.sh

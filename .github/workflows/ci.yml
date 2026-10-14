@@ -45,3 +45,34 @@ jobs:
           name: build-${{ github.sha }}
           path: dist/
           retention-days: 7
+
+  e2e:
+    runs-on: ubuntu-24.04
+    container:
+      image: cypress/included:15.16.0
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Start production preview
+        run: npm run preview -- --host 0.0.0.0 > /tmp/daggerheart-preview.log 2>&1 &
+
+      - name: Run Cypress browser tests
+        run: cypress run --browser chrome --config baseUrl=http://127.0.0.1:4173
+
+      - name: Upload Cypress artifacts
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-artifacts-${{ github.sha }}
+          path: |
+            cypress/screenshots/
+            /tmp/daggerheart-preview.log
+          if-no-files-found: ignore

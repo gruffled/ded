@@ -32,6 +32,7 @@ A modern web-based character and encounter designer for the Daggerheart tabletop
 - 🔄 **Sort Options** - Organize adversaries by name or tier
 - ✅ **Type Safety** - Clean, maintainable React codebase with best practices
 - 🧪 **Tested** - Comprehensive test suite with Vitest and Testing Library
+- 🧭 **UI Smoke Tests** - Cypress browser tests run entirely in containers
 - 🚀 **CI/CD** - Automated testing and builds with GitHub Actions
 
 ## 🚀 Quick Start
@@ -68,6 +69,7 @@ The character print layout is an original template inspired by the information h
 | `make test-data`  | 🧪 Run SRD extractor/data tests     | -    |
 | `make test-watch` | 👀 Run tests in watch mode          | -    |
 | `make lint`       | 🔍 Run ESLint                       | -    |
+| `make e2e`        | 🧭 Run Cypress UI tests in containers | 8081 |
 | `make down`       | 🛑 Stop all containers              | -    |
 | `make logs`       | 📋 View container logs              | -    |
 | `make restart`    | 🔄 Restart development server       | -    |
