@@ -25,8 +25,8 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80
-EXPOSE 80
+# Chainguard's nginx image runs as a non-root user, so use an unprivileged port.
+EXPOSE 8080
 
 # Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["-g", "daemon off;"]

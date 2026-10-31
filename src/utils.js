@@ -97,18 +97,20 @@ export const filterAndSortAdversaries = (
   searchTerm,
   filterByTier,
   partyTier,
-  sortBy
+  sortBy,
+  typeFilter = "all"
 ) => {
   const filtered = adversaries.filter((adv) => {
     const searchTermLower = searchTerm.toLowerCase();
     const matchesSearch =
       adv.name.toLowerCase().includes(searchTermLower) ||
-      adv.type.toLowerCase().includes(searchTermLower) ||
+      getAdversaryType(adv).includes(searchTermLower) ||
       `tier ${adv.tier}`.includes(searchTermLower);
 
     const matchesTier = !filterByTier || Math.abs(adv.tier - partyTier) <= TIER_FILTER_RANGE;
+    const matchesType = typeFilter === "all" || getAdversaryType(adv) === typeFilter.toLowerCase();
 
-    return matchesSearch && matchesTier;
+    return matchesSearch && matchesTier && matchesType;
   });
 
   return filtered.sort((a, b) => {

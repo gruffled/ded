@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚔️ Encounter Designer for Daggerheart
+# ⚔️ Daggerheart Designer
 
 **Build balanced encounters for your Daggerheart adventures**
 
@@ -10,7 +10,7 @@
 [![Vite](https://img.shields.io/badge/Vite-7.1-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-A modern web-based encounter designer for the Daggerheart tabletop RPG system. Create, manage, and balance encounters with an intuitive interface and powerful battle point calculator.
+A modern web-based character and encounter designer for the Daggerheart tabletop RPG system. Create player characters, manage encounters, and balance battles with an intuitive interface and powerful battle point calculator.
 
 [Quick Start](#-quick-start) • [Features](#-features) • [Documentation](#-project-structure) • [Contributing](#-contributing)
 
@@ -21,6 +21,10 @@ A modern web-based encounter designer for the Daggerheart tabletop RPG system. C
 ## ✨ Features
 
 - 🎲 **Encounter Builder** - Build balanced encounters with automatic battle point calculations
+- 🧙 **Character Builder** - Create characters with class, heritage, traits, equipment, and domain cards
+- 📈 **Level Up** - Take a character from level 1 to 10: tier achievements, advancements, upgraded subclass cards, multiclassing, new domain cards, and higher-tier gear
+- 💾 **Character Files** - Save characters in the browser and import/export JSON backups
+- 🖨️ **Custom Character Printout** - Print a two-page sheet with an original, official-inspired character sheet and class-guide layout
 - 📚 **Adversary Library** - Browse and search a comprehensive library of creatures
 - 🔍 **Smart Filtering** - Filter by tier and search by name, type, or attributes
 - ⚖️ **Difficulty Scaling** - Adjust encounters with easy/hard modes and damage boosts
@@ -29,6 +33,7 @@ A modern web-based encounter designer for the Daggerheart tabletop RPG system. C
 - 🔄 **Sort Options** - Organize adversaries by name or tier
 - ✅ **Type Safety** - Clean, maintainable React codebase with best practices
 - 🧪 **Tested** - Comprehensive test suite with Vitest and Testing Library
+- 🧭 **UI Smoke Tests** - Cypress browser tests run entirely in containers
 - 🚀 **CI/CD** - Automated testing and builds with GitHub Actions
 
 ## 🚀 Quick Start
@@ -51,6 +56,10 @@ make dev
 
 🎉 Open [http://localhost:5173](http://localhost:5173) and start building encounters!
 
+The character print layout is an original template inspired by the information hierarchy of the official Daggerheart sheet references. It does not embed or modify the official PDFs, which keeps class and subclass content isolated and makes the text flow reliably:
+[Character Sheets and Guides](https://www.daggerheart.com/wp-content/uploads/2025/05/Character-Sheets-and-Guides-Daggerheart-Aug252026.pdf) and
+[High-Fantasy Character Guides and Sheets](https://www.daggerheart.com/wp-content/uploads/2026/08/CharacterGuidesAndSheetsTile_HF_2026-07-23.pdf).
+
 ## 🛠️ Available Commands
 
 | Command           | Description                         | Port |
@@ -61,6 +70,7 @@ make dev
 | `make test-data`  | 🧪 Run SRD extractor/data tests     | -    |
 | `make test-watch` | 👀 Run tests in watch mode          | -    |
 | `make lint`       | 🔍 Run ESLint                       | -    |
+| `make e2e`        | 🧭 Run Cypress UI tests in containers | 8081 |
 | `make down`       | 🛑 Stop all containers              | -    |
 | `make logs`       | 📋 View container logs              | -    |
 | `make restart`    | 🔄 Restart development server       | -    |
@@ -101,6 +111,28 @@ python3 scripts/adversary_extractor.py /path/to/DH_SRD.pdf public/environments.j
 Environments are kept separate from adversaries because they are encounter
 context and do not spend Battle Points.
 
+### Refreshing character data
+
+Everything the Character Builder knows about the rules comes from the SRD PDF
+too, so no class, card or weapon text is typed in by hand. Each script needs
+`pdftotext` (from poppler) and validates its output before writing:
+
+```sh
+python3 scripts/character_extractor.py /path/to/DH_SRD.pdf src/data
+python3 scripts/domain_card_extractor.py /path/to/DH_SRD.pdf src/data/domain-cards.json
+python3 scripts/equipment_extractor.py /path/to/DH_SRD.pdf src/data/equipment.json
+```
+
+These write `classes.json`, `ancestries.json`, `communities.json`,
+`domain-cards.json` (levels 1–10) and `equipment.json` (weapons and armor for
+every tier) under `src/data/`. The character and card scripts read fixed page ranges of the SRD 2.0 PDF; if a
+newer edition moves content, pass `--first-page` / `--last-page`. Run
+`make test-data` afterwards and review the diff.
+
+The level-up advancement options and slot counts are not in the SRD text; they
+are transcribed from the official character sheets linked above into
+`src/levelUp.js`.
+
 ## 📁 Project Structure
 
 ```
@@ -109,6 +141,9 @@ context and do not spend Battle Points.
 │   ├── adversaries.json    # Adversary database
 │   └── environments.json   # Environment database
 ├── 📂 src/
+│   ├── 📂 data/            # SRD character data (generated)
+│   ├── 📄 characterData.js  # Loads the generated character data
+│   ├── 📄 characterUtils.js # Character validation and derived stats
 │   ├── 📂 components/      # React UI components
 │   ├── � test/            # Test setup and utilities
 │   ├── 📄 constants.js     # Game rules configuration

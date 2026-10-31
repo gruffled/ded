@@ -1,5 +1,26 @@
 # Hope & Fear — Release Notes
 
+## v0.3.0 — 2026-10-31
+
+Daggerheart Designer now builds characters as well as encounters.
+
+- **Character Builder:** create characters with class, subclass, ancestry (including Mixed Ancestry), community, traits, equipment, Experiences and domain cards. Save them in the browser, export and import JSON, and print a two-page character sheet and class guide.
+- **Level Up (levels 2–10):** tier achievements, the advancement options with their slots, trait marking, upgraded subclass cards, multiclassing, a new domain card each level and optional card exchange. Stats, trait scores, Experiences and the printed sheet all reflect level-ups.
+- **Equipment by tier:** weapons and armor from all four tiers, limited to the character's tier.
+- **SRD-accurate data:** classes, subclasses, ancestries, communities, domain cards (levels 1–10), weapons and armor are generated from the SRD PDF by new extractor scripts instead of being typed by hand. Checking against the SRD corrected about half of the earlier level-1 domain card text, several subclass features and the weapon lists.
+- **Encounter Builder:** filter adversaries by type and page through long lists; party size and level inputs can be cleared while typing; search no longer fails on adversaries with no type.
+- **Printing:** the character sheet prints on exactly two pages.
+- **Accessibility:** character builder form labels are now linked to their inputs.
+- **Deployment:** the production image listens on an unprivileged port (8080); nginx returns 404 for missing data files and caches built assets; the release workflow runs lint, tests and the build before publishing and no longer tags pre-releases as `latest`.
+- **Testing:** 92 JavaScript tests, 32 Python extractor/data tests, and Cypress browser smoke tests in CI.
+
+Known limitations:
+
+- Domain cards are listed together; the active loadout limit and vault are not tracked.
+- Multiclassing lets you choose one class feature from the new class; the SRD says you gain "its class feature".
+- Advancement slot counts are transcribed from the official character sheet because the SRD text does not list them.
+- Changing class after levelling resets the character to level 1.
+
 ## v0.2.0 — 2026-10-06
 
 - Imported 264 SRD 2.0 adversaries and 47 environments.

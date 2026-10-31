@@ -152,6 +152,29 @@ describe("filterAndSortAdversaries", () => {
     expect(result[2].name).toBe("Orc");
   });
 
+  it("should filter by adversary type", () => {
+    const result = filterAndSortAdversaries(
+      mockAdversaries,
+      "",
+      false,
+      2,
+      "name",
+      "leader",
+    );
+    expect(result).toHaveLength(0);
+
+    const minions = filterAndSortAdversaries(
+      mockAdversaries,
+      "",
+      false,
+      2,
+      "name",
+      "minion",
+    );
+    expect(minions).toHaveLength(1);
+    expect(minions[0].name).toBe("Goblin");
+  });
+
   it("should sort by tier by default", () => {
     const result = filterAndSortAdversaries(
       mockAdversaries,
@@ -163,5 +186,13 @@ describe("filterAndSortAdversaries", () => {
     expect(result[0].tier).toBe(1);
     expect(result[1].tier).toBe(2);
     expect(result[2].tier).toBe(3);
+  });
+});
+
+describe("filterAndSortAdversaries with incomplete records", () => {
+  it("does not throw when an adversary has no type", () => {
+    const adversaries = [{ name: "Mystery", tier: 1 }, { name: "Goblin", tier: 1, type: "Minion" }];
+    expect(filterAndSortAdversaries(adversaries, "gob", false, 1, "name")).toHaveLength(1);
+    expect(filterAndSortAdversaries(adversaries, "", false, 1, "name", "minion")).toHaveLength(1);
   });
 });

@@ -8,7 +8,8 @@ export const TIER_THRESHOLDS = [
 
 export const MAJOR_ADVERSARY_TYPES = ["bruiser", "horde", "leader", "solo"];
 
-// Battle Point costs from Daggerheart SRD 2.0, p. 94.
+// Battle Point costs from the Daggerheart SRD 2.0 encounter-building rules.
+// Kept in sync with scripts/adversary_extractor.py by tests.
 // Minions are handled as party-sized groups in calculateBudget().
 export const BATTLE_POINTS_BY_TYPE = {
   minion: 1,
