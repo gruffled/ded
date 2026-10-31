@@ -32,8 +32,8 @@ jobs:
       - name: Run linter
         run: npm run lint
 
-      - name: Run tests
-        run: npm test
+      - name: Run tests with coverage
+        run: npm run test:coverage
 
       - name: Build project
         run: npm run build
@@ -48,8 +48,12 @@ jobs:
 
   e2e:
     runs-on: ubuntu-24.04
+    # A frozen browser never fails on its own; fail fast instead of hanging for hours.
+    timeout-minutes: 15
     container:
       image: cypress/included:15.16.0
+      # Chrome crashes or freezes with the container default of 64 MB shared memory.
+      options: --shm-size=2gb
 
     steps:
       - name: Checkout code
@@ -65,6 +69,7 @@ jobs:
         run: npm run preview -- --host 0.0.0.0 > /tmp/daggerheart-preview.log 2>&1 &
 
       - name: Run Cypress browser tests
+        timeout-minutes: 10
         run: cypress run --browser chrome --config baseUrl=http://127.0.0.1:4173
 
       - name: Upload Cypress artifacts

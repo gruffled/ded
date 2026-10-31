@@ -56,7 +56,7 @@ function Controls({
       text="light"
       className="shadow-lg border-start border-4 border-primary"
     >
-      <Card.Header as="h5">⚙️ Encounter Setup</Card.Header>
+      <Card.Header as="h2" className="h5">⚙️ Encounter Setup</Card.Header>
       <Card.Body>
         <Row className="mb-3">
           <NumberField
@@ -77,7 +77,7 @@ function Controls({
           />
         </Row>
 
-        <h6 className="mt-4 mb-3">Difficulty Adjustments</h6>
+        <h3 className="h6 mt-4 mb-3">Difficulty Adjustments</h3>
         <Form>
           <Form.Check
             type="radio"

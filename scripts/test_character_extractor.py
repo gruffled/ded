@@ -107,6 +107,34 @@ class CharacterExtractorTest(unittest.TestCase):
         self.assertEqual(len(self.bard["connections"]), 2)
 
 
+PERIOD_FIXTURE = """\
+SPECIALIZATION FEATURE
+
+Maestro. Your rallying songs steel the courage of those who
+listen. When you give a Rally Die to an ally, they can gain a
+Hope or clear a Stress.
+
+MASTERY FEATURE
+Virtuoso. You are among the greatest of your craft.
+"""
+
+
+class PeriodNameTest(unittest.TestCase):
+    def test_first_feature_may_use_a_full_stop_after_its_name(self):
+        sections = extractor.split_sections(extractor.clean_lines(PERIOD_FIXTURE))
+        specialization = extractor.parse_features(sections["SPECIALIZATION FEATURES"], allow_period_start=True)
+        mastery = extractor.parse_features(sections["MASTERY FEATURES"], allow_period_start=True)
+        self.assertEqual([f["name"] for f in specialization], ["Maestro"])
+        self.assertTrue(specialization[0]["description"].endswith("clear a Stress."))
+        self.assertEqual([f["name"] for f in mastery], ["Virtuoso"])
+
+    def test_full_stops_are_ignored_unless_enabled_or_not_first(self):
+        sections = extractor.split_sections(extractor.clean_lines(PERIOD_FIXTURE))
+        self.assertEqual(extractor.parse_features(sections["SPECIALIZATION FEATURES"]), [])
+        later = extractor.parse_features(["Alpha: First.", "Beta. Not a feature name."], allow_period_start=True)
+        self.assertEqual([f["name"] for f in later], ["Alpha"])
+
+
 class HelperTest(unittest.TestCase):
     def test_title_case_keeps_small_words_and_possessives(self):
         self.assertEqual(extractor.title_case("PACT OF THE ENDLESS"), "Pact of the Endless")
@@ -143,6 +171,12 @@ class BundledCharacterDataTest(unittest.TestCase):
             "ancestries": self.load("ancestries"),
             "communities": self.load("communities"),
         })
+
+    def test_every_subclass_has_all_three_cards(self):
+        for item in self.load("classes"):
+            for subclass in item["subclasses"]:
+                for tier in ("foundation", "specialization", "mastery"):
+                    self.assertTrue(subclass[tier], f"{item['name']}/{subclass['name']} {tier}")
 
     def test_class_domains_have_matching_domain_cards(self):
         cards = json.loads((SCRIPT_DIR.parent / "src" / "data" / "domain-cards.json").read_text(encoding="utf-8"))

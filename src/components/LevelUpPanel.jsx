@@ -108,14 +108,23 @@ function PickEditor({ pick, onChange, context }) {
     );
   }
   if (pick.option === "domainCard") {
-    const cards = getAvailableCards(character, nextLevel, context.ownedIds, { cap: ADVANCEMENT_CARD_CAP[pick.tier] });
+    // Each tier's slot caps the card's level, so pick the lowest open tier that
+    // can hold the chosen card and keep the higher-tier slots free.
+    const openTiers = getOpenTiers("domainCard", nextLevel, context.otherPicks);
+    const cap = Math.max(...openTiers.map((tier) => ADVANCEMENT_CARD_CAP[tier]));
+    const cards = getAvailableCards(character, nextLevel, context.ownedIds, { cap });
+    const chooseCard = (cardId) => {
+      const level = getCard(cardId)?.level ?? 0;
+      const tier = openTiers.find((open) => ADVANCEMENT_CARD_CAP[open] >= level) ?? pick.tier;
+      onChange({ ...pick, cardId, tier });
+    };
     return (
       <Form.Select
         size="sm"
         className="mt-1"
         aria-label="Additional domain card"
         value={pick.cardId ?? ""}
-        onChange={(event) => onChange({ ...pick, cardId: event.target.value })}
+        onChange={(event) => chooseCard(event.target.value)}
       >
         <option value="">Choose a domain card...</option>
         {cards.map((card) => <option key={card.id} value={card.id}>{cardLabel(card)}</option>)}
@@ -208,7 +217,7 @@ function LevelUpPanel({ character, onChange, selectedClass, selectedSubclass }) 
   };
 
   const header = (
-    <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
+    <Card.Header as="h3" className="h5 d-flex justify-content-between align-items-center">
       <span>Step 5 · Level up</span>
       <Badge bg="warning" text="dark">Level {level} · Tier {progress.tier}</Badge>
     </Card.Header>
@@ -236,7 +245,7 @@ function LevelUpPanel({ character, onChange, selectedClass, selectedSubclass }) 
             </Button>
             <Button variant="outline-danger" disabled={levelUps.length === 0} onClick={undo}>Undo level {level}</Button>
           </div>
-          <h6>History</h6>
+          <h4 className="h6">History</h4>
           {renderHistory()}
         </Card.Body>
       </Card>
@@ -250,9 +259,12 @@ function LevelUpPanel({ character, onChange, selectedClass, selectedSubclass }) 
   const achievesTier = TIER_ACHIEVEMENT_LEVELS.includes(nextLevel);
   const experienceNames = [...progress.experiences.map((experience) => experience.name), ...(achievesTier ? [draft.experience] : [])];
   const markedTraits = getMarkedTraits(levelUps, nextLevel);
-  const upgradeIndex = progress.subclassUpgrades.length + draft.picks.filter((pick) => pick.option === "subclass").length;
-  const upgradeName = upgradeIndex === 0 ? "specialization" : "mastery";
-  const upgradeFeatures = (selectedSubclass?.[upgradeName] ?? []).map((feature) => feature.name);
+  // Which card a subclass upgrade grants depends on the upgrades taken before it.
+  const upgradeFor = (pickIndex) => {
+    const earlier = draft.picks.slice(0, pickIndex).filter((pick) => pick.option === "subclass").length;
+    const name = progress.subclassUpgrades.length + earlier === 0 ? "specialization" : "mastery";
+    return { upgradeName: name, upgradeFeatures: (selectedSubclass?.[name] ?? []).map((feature) => feature.name) };
+  };
   const withDraft = { ...character, levelUps: [...levelUps, { ...draft, domainCardId: "" }] };
   const ownedAfterPicks = getProgress(withDraft).cardIds;
   const stepFourCards = getAvailableCards(withDraft, nextLevel, ownedAfterPicks);
@@ -275,9 +287,9 @@ function LevelUpPanel({ character, onChange, selectedClass, selectedSubclass }) 
     <Card bg="secondary" text="light" className="shadow-lg border-start border-4 border-info">
       {header}
       <Card.Body>
-        <h5 className="mb-3">Level {level} → {nextLevel}</h5>
+        <h4 className="h5 mb-3">Level {level} → {nextLevel}</h4>
 
-        <h6>1 · Tier achievements</h6>
+        <h4 className="h6">1 · Tier achievements</h4>
         <p className="small text-secondary">
           Damage thresholds increase by 1.
           {achievesTier && " You gain a new Experience at +2 and +1 Proficiency, and trait marks are cleared."}
@@ -292,7 +304,7 @@ function LevelUpPanel({ character, onChange, selectedClass, selectedSubclass }) 
           />
         )}
 
-        <h6>2 · Advancements <span className="text-secondary small">(choose two · {spent}/2 chosen)</span></h6>
+        <h4 className="h6">2 · Advancements <span className="text-secondary small">(choose two · {spent}/2 chosen)</span></h4>
         <div className="d-flex flex-wrap gap-2 mb-2">
           {ADVANCEMENT_OPTIONS.map((option) => {
             const open = getOpenTiers(option.id, nextLevel, picksSoFar);
@@ -313,12 +325,12 @@ function LevelUpPanel({ character, onChange, selectedClass, selectedSubclass }) 
             <PickEditor
               pick={pick}
               onChange={(next) => updatePick(index, next)}
-              context={{ character, nextLevel, experienceNames, markedTraits: [...markedTraits, ...draft.picks.filter((other, i) => i !== index && other.option === "traits").flatMap((other) => other.traits ?? [])], selectedClass, upgradeName, upgradeFeatures, ownedIds: [...ownedIds, ...draft.picks.filter((other, i) => i !== index && other.option === "domainCard").map((other) => other.cardId)] }}
+              context={{ character, nextLevel, experienceNames, markedTraits: [...markedTraits, ...draft.picks.filter((other, i) => i !== index && other.option === "traits").flatMap((other) => other.traits ?? [])], selectedClass, ...upgradeFor(index), otherPicks: [...priorPicks, ...draft.picks.filter((_, i) => i !== index)], ownedIds: [...ownedIds, ...draft.picks.filter((other, i) => i !== index && other.option === "domainCard").map((other) => other.cardId)] }}
             />
           </div>
         ))}
 
-        <h6 className="mt-3">3 · New domain card</h6>
+        <h4 className="h6 mt-3">3 · New domain card</h4>
         <p className="small text-secondary">Take a card at your level or lower from one of your domains.</p>
         <Form.Select
           size="sm"

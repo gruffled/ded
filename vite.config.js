@@ -15,5 +15,15 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/test/setup.js",
+    // Full UI walkthroughs are slow under coverage instrumentation.
+    testTimeout: 20000,
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.{js,jsx}"],
+      exclude: ["src/**/*.test.{js,jsx}", "src/test/**", "src/main.jsx"],
+      reporter: ["text-summary", "text"],
+      // A floor, not a target: fail CI if coverage drops noticeably.
+      thresholds: { statements: 95, lines: 95, functions: 85, branches: 85 },
+    },
   },
 });

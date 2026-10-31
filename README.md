@@ -83,11 +83,23 @@ The character print layout is an original template inspired by the information h
 npm install       # Install dependencies
 npm run dev       # Start development server
 npm test          # Run tests
+npm run test:coverage  # Run tests and enforce the coverage floor
 npm run lint      # Run linter
 ```
 
 The Makefile can use another OCI-compatible engine by overriding
 `CONTAINER_ENGINE`, for example `make CONTAINER_ENGINE=docker test`.
+
+### 🧪 Testing
+
+| Layer | What it covers | Run it |
+|-------|----------------|--------|
+| Unit and component (Vitest, Testing Library) | Budget and level-up rules, character import/export, every component, full builder walkthroughs | `npm test` |
+| Randomized rules check | 30 seeded characters levelled from 1 to 10, validated against the advancement rules | part of `npm test` |
+| Accessibility (axe) | Labels, roles and names across the builders and dialogs | part of `npm test` |
+| Coverage | Fails CI if coverage falls below the floor in `vite.config.js` | `npm run test:coverage` |
+| SRD extractors (Python) | The PDF parsers and the bundled SRD data | `make test-data` |
+| Browser end-to-end (Cypress) | Levelling up, persistence, import/export, printing, the encounter builder | `make e2e` |
 
 ### Refreshing adversary data
 

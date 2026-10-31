@@ -23,8 +23,8 @@ function EncounterList({ encounter, onRemove, onClear }) {
       className="flex-grow-1 d-flex flex-column shadow-lg border-start border-4 border-success"
     >
       <Card.Header
-        as="h5"
-        className="d-flex justify-content-between align-items-center"
+        as="h2"
+        className="h5 d-flex justify-content-between align-items-center"
       >
         <span>
           <span className="me-2">🎲</span>

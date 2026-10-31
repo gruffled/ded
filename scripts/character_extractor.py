@@ -140,11 +140,22 @@ def join_text(lines: list[str]) -> str:
 SIDEBAR_NAMES = {"Tip", "Note"}
 
 
-def parse_features(lines: list[str]) -> list[dict]:
-    """Split 'Name: description' items; unmatched leading text is ignored."""
+# The SRD's Bard section writes the first feature name of a section with a
+# full stop instead of a colon ("Maestro. Your rallying songs ...").
+PERIOD_FEATURE_RE = re.compile(r"^(?P<name>[A-Z][\w’'&\-]*(?: [\w’'&\-]+){0,3})\. (?P<text>\S.*)$")
+
+
+def parse_features(lines: list[str], allow_period_start: bool = False) -> list[dict]:
+    """Split 'Name: description' items; unmatched leading text is ignored.
+
+    With `allow_period_start`, the first line of the section may also use the
+    'Name. description' form.
+    """
     items: list[dict] = []
     for line in lines:
         match = FEATURE_RE.match(line) if not BULLET_RE.match(line) else None
+        if not match and allow_period_start and not items:
+            match = PERIOD_FEATURE_RE.match(line)
         if match:
             items.append({"name": match["name"], "lines": [match["text"]]})
         elif items:
@@ -192,8 +203,8 @@ def parse_subclass(name: str, lines: list[str]) -> dict:
         "description": description,
         "spellcastTrait": trait,
         "foundation": parse_features(foundation),
-        "specialization": parse_features(sections.get("SPECIALIZATION FEATURES", [])),
-        "mastery": parse_features(sections.get("MASTERY FEATURES", [])),
+        "specialization": parse_features(sections.get("SPECIALIZATION FEATURES", []), allow_period_start=True),
+        "mastery": parse_features(sections.get("MASTERY FEATURES", []), allow_period_start=True),
     }
 
 
@@ -327,8 +338,9 @@ def validate(data: dict) -> None:
         if len(c["subclasses"]) != 2:
             raise ValueError(f"{c['name']}: expected two subclasses, found {len(c['subclasses'])}")
         for sub in c["subclasses"]:
-            if not sub["foundation"]:
-                raise ValueError(f"{c['name']}/{sub['name']}: no foundation features")
+            for tier in ("foundation", "specialization", "mastery"):
+                if not sub[tier]:
+                    raise ValueError(f"{c['name']}/{sub['name']}: no {tier} features")
         if not c["backgroundQuestions"] or not c["connections"]:
             raise ValueError(f"{c['name']}: missing questions")
     for key in ("ancestries", "communities"):

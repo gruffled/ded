@@ -24,7 +24,16 @@ function AdversaryCard({ adversary, partyTier, onAdd, onShowDetails }) {
   return (
     <ListGroup.Item className="d-flex justify-content-between align-items-center bg-dark text-light border-secondary">
       <div
+        role="button"
+        tabIndex={0}
+        aria-label={`Details for ${adversary.name}`}
         onClick={() => onShowDetails(adversary)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onShowDetails(adversary);
+          }
+        }}
         style={{ cursor: "pointer", width: "100%" }}
       >
         <span className="fw-bold">{adversary.name}</span>

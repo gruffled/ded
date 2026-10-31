@@ -2,7 +2,6 @@ import React, { useMemo, useRef, useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -365,7 +364,7 @@ function CharacterBuilder() {
     if (step === 0) {
       return (
         <Card bg="secondary" text="light" className="shadow-lg border-start border-4 border-primary">
-          <Card.Header as="h5">Step 1 · Class and identity</Card.Header>
+          <Card.Header as="h3" className="h5">Step 1 · Class and identity</Card.Header>
           <Card.Body>
             <Row className="g-3">
               <Col md={6}><Form.Group controlId="character-name"><Form.Label>Name</Form.Label><Form.Control value={character.name} onChange={(event) => updateCharacter({ name: event.target.value })} /></Form.Group></Col>
@@ -395,7 +394,7 @@ function CharacterBuilder() {
       };
       return (
         <Card bg="secondary" text="light" className="shadow-lg border-start border-4 border-info">
-          <Card.Header as="h5">Step 2 · Heritage and traits</Card.Header>
+          <Card.Header as="h3" className="h5">Step 2 · Heritage and traits</Card.Header>
           <Card.Body>
             <Form.Group className="mb-3" controlId="character-primary-ancestry"><Form.Label>Primary ancestry</Form.Label><Form.Select value={character.ancestryIds[0] ?? ""} onChange={(event) => handleAncestryChange(0, event.target.value)}><option value="">Choose an ancestry...</option>{ANCESTRIES.map((item) => <option value={item.id} key={item.id}>{item.name}</option>)}</Form.Select></Form.Group>
             <Form.Group className="mb-3" controlId="character-second-ancestry"><Form.Label>Second ancestry <span className="text-secondary">(optional Mixed Ancestry)</span></Form.Label><Form.Select value={character.ancestryIds[1] ?? ""} onChange={(event) => handleAncestryChange(1, event.target.value)}><option value="">None</option>{ANCESTRIES.map((item) => <option value={item.id} key={item.id}>{item.name}</option>)}</Form.Select></Form.Group>
@@ -404,7 +403,7 @@ function CharacterBuilder() {
             {character.ancestryIds.length > 0 && <div className="mb-3">{(character.ancestryIds.length === 1 ? (ANCESTRIES.find((item) => item.id === character.ancestryIds[0])?.features ?? []) : [0, 1].map((featureIndex) => ANCESTRIES.find((item) => item.id === character.ancestryIds[(character.ancestryFeatureSources ?? [0, 1])[featureIndex]])?.features[featureIndex])).filter(Boolean).map((item) => <Alert variant="dark" className="small py-2 mb-2" key={item.name}><strong>{item.name}:</strong> {item.description}</Alert>)}</div>}
             <Form.Group className="mb-4" controlId="character-community"><Form.Label>Community</Form.Label><Form.Select value={character.communityId} onChange={(event) => updateCharacter({ communityId: event.target.value })}><option value="">Choose a community...</option>{COMMUNITIES.map((item) => <option value={item.id} key={item.id}>{item.name}</option>)}</Form.Select></Form.Group>
             {COMMUNITIES.find((item) => item.id === character.communityId)?.feature && <Alert variant="dark" className="small py-2"><strong>{COMMUNITIES.find((item) => item.id === character.communityId).feature.name}:</strong> {COMMUNITIES.find((item) => item.id === character.communityId).feature.description}</Alert>}
-            <h6>Assign traits</h6>
+            <h4 className="h6">Assign traits</h4>
             <p className="small text-secondary mb-2">Select a trait, then assign one of the available scores. Each chip represents one score from the SRD array.</p>
             <div className="trait-score-pool border border-secondary rounded p-2 mb-3">
               <div className="small text-secondary mb-2">Available scores for <strong className="text-light">{CHARACTER_TRAITS.find(({ id }) => id === selectedTrait)?.name}</strong>:</div>
@@ -419,7 +418,7 @@ function CharacterBuilder() {
       const selectedPrimary = PRIMARY_WEAPONS.find((item) => item.id === character.primaryWeaponId);
       return (
         <Card bg="secondary" text="light" className="shadow-lg border-start border-4 border-success">
-          <Card.Header as="h5">Step 3 · Starting equipment and domain cards</Card.Header>
+          <Card.Header as="h3" className="h5">Step 3 · Starting equipment and domain cards</Card.Header>
           <Card.Body>
             <Row className="g-3">
               <Col md={6}><Form.Group controlId="character-primary-weapon"><Form.Label>Primary weapon</Form.Label><Form.Select value={character.primaryWeaponId} onChange={(event) => updateCharacter({ primaryWeaponId: event.target.value, secondaryWeaponId: "" })}><option value="">Choose a primary weapon...</option>{tierGroups(PRIMARY_WEAPONS, stats.tier).map(([tier, items]) => <optgroup label={`Tier ${tier}`} key={tier}>{items.map((weapon) => <option value={weapon.id} key={weapon.id}>{weapon.name} · {weapon.trait} · {weapon.range} · {weapon.die}{weapon.bonus ? `+${weapon.bonus}` : ""}</option>)}</optgroup>)}</Form.Select></Form.Group></Col>
@@ -429,7 +428,7 @@ function CharacterBuilder() {
               <Col md={6}><Form.Group controlId="character-starting-potion"><Form.Label>Starting potion</Form.Label><Form.Select value={character.potion} onChange={(event) => updateCharacter({ potion: event.target.value })}><option>Minor Health Potion</option><option>Minor Stamina Potion</option></Form.Select></Form.Group></Col>
             </Row>
             <hr className="border-secondary my-4" />
-            <div className="d-flex justify-content-between align-items-center mb-2"><h6 className="mb-0">Level 1 domain cards</h6><Badge bg={character.domainCardIds.length === 2 ? "success" : "warning"}>{character.domainCardIds.length}/2 chosen</Badge></div>
+            <div className="d-flex justify-content-between align-items-center mb-2"><h4 className="h6 mb-0">Level 1 domain cards</h4><Badge bg={character.domainCardIds.length === 2 ? "success" : "warning"}>{character.domainCardIds.length}/2 chosen</Badge></div>
             <p className="small text-secondary">Choose two cards from either of your class’s domains.</p>
             <Row className="g-2">{domainCards.map((card) => <Col md={6} key={card.id}><Button variant={character.domainCardIds.includes(card.id) ? "primary" : "outline-light"} className="w-100 text-start h-100" onClick={() => toggleDomainCard(card.id)}><strong>{card.name}</strong><span className="d-block small">{card.domain} · {card.type} · Recall {card.recallCost}</span><span className="d-block small mt-1 card-text">{card.description}</span></Button></Col>)}</Row>
             {!selectedClass && <p className="text-secondary small mt-3 mb-0">Choose a class first to see its available domains.</p>}
@@ -442,15 +441,15 @@ function CharacterBuilder() {
     }
     return (
       <Card bg="secondary" text="light" className="shadow-lg border-start border-4 border-warning">
-        <Card.Header as="h5">Step 4 · Story and review</Card.Header>
+        <Card.Header as="h3" className="h5">Step 4 · Story and review</Card.Header>
         <Card.Body>
-          <h6>Experiences</h6>
+          <h4 className="h6">Experiences</h4>
           <p className="small text-secondary">Create two Experiences. Each starts with a +2 modifier.</p>
           <Row className="g-2 mb-4">{character.experiences.map((experience, index) => <Col md={6} key={index}><Form.Control placeholder={`Experience ${index + 1}`} value={experience.name} onChange={(event) => updateExperience(index, event.target.value)} /></Col>)}</Row>
-          <h6>Background questions</h6>
+          <h4 className="h6">Background questions</h4>
           <p className="small text-secondary">Answer any questions from your subclass guide, or write your own.</p>
           {character.backgroundAnswers.map((answer, index) => <Form.Control as="textarea" rows={2} className="mb-2" placeholder={`Background answer ${index + 1}`} value={answer} onChange={(event) => updateCharacter({ backgroundAnswers: character.backgroundAnswers.map((item, currentIndex) => currentIndex === index ? event.target.value : item) })} key={index} />)}
-          <h6 className="mt-4">Connections</h6>
+          <h4 className="h6 mt-4">Connections</h4>
           <Form.Control as="textarea" rows={3} placeholder="Describe relationships with the other PCs..." value={character.connections[0]?.text ?? ""} onChange={(event) => updateCharacter({ connections: [{ text: event.target.value }] })} />
           <Alert variant={errors.length ? "warning" : "success"} className="mt-4 mb-0"><strong>{errors.length ? "Character still needs a few choices:" : "Ready to play."}</strong>{errors.length > 0 && <ul className="small mb-0 mt-2">{errors.map((error) => <li key={error}>{error}</li>)}</ul>}</Alert>
         </Card.Body>
@@ -462,14 +461,14 @@ function CharacterBuilder() {
     <div className="character-builder">
       <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <div><h2 className="mb-1">🧙 Character Builder</h2><p className="text-secondary mb-0">Create a Daggerheart character and level it up to level 10.</p></div>
-        <ButtonGroup>
+        <div className="d-flex flex-wrap gap-2">
           <Button variant="outline-danger" onClick={resetCharacter}>Clear character</Button>
           <Button variant="outline-success" onClick={save}>Save</Button>
           <Button variant="outline-info" onClick={exportCharacter}>Export JSON</Button>
           <Button variant="outline-warning" onClick={() => importRef.current?.click()}>Import</Button>
           <Button variant="outline-light" onClick={() => window.print()}>Print sheet</Button>
-        </ButtonGroup>
-        <input ref={importRef} type="file" accept="application/json,.json" className="d-none" onChange={importCharacter} />
+        </div>
+        <input ref={importRef} type="file" aria-label="Import character file" accept="application/json,.json" className="d-none" onChange={importCharacter} />
       </div>
       {notice && <Alert variant={notice.variant} dismissible onClose={() => setNotice(null)}>{notice.text}</Alert>}
       <PrintableCharacterSheet character={character} selectedClass={selectedClass} selectedSubclass={selectedSubclass} stats={stats} />

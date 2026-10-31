@@ -53,7 +53,7 @@ function ActiveEnvironment({
       <Card.Body>
         <div className="d-flex align-items-start justify-content-between gap-3">
           <div>
-            <h5 className="mb-1">{environment.name}</h5>
+            <h3 className="h5 mb-1">{environment.name}</h3>
             <div className="small text-secondary">
               <Badge pill bg="success" className="me-2">T{environment.tier}</Badge>
               {environment.type} · Difficulty {environment.difficulty} · {tierMessage}

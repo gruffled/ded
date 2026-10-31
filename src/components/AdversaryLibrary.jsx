@@ -49,7 +49,7 @@ function AdversaryLibrary({
       text="light"
       className="h-100 d-flex flex-column shadow-lg border-start border-4 border-info"
     >
-      <Card.Header as="h5" className="d-flex align-items-center">
+      <Card.Header as="h2" className="h5 d-flex align-items-center">
         <span className="me-2">📚</span>
         Adversary Library
         <span className="ms-auto badge bg-info text-dark">
@@ -80,7 +80,7 @@ function AdversaryLibrary({
               ))}
             </Form.Select>
           </Form.Group>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="adversary-sort">
             <Form.Label className="small text-secondary">Sort by</Form.Label>
             <Form.Select
               value={sortBy}
