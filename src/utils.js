@@ -104,11 +104,11 @@ export const filterAndSortAdversaries = (
     const searchTermLower = searchTerm.toLowerCase();
     const matchesSearch =
       adv.name.toLowerCase().includes(searchTermLower) ||
-      adv.type.toLowerCase().includes(searchTermLower) ||
+      getAdversaryType(adv).includes(searchTermLower) ||
       `tier ${adv.tier}`.includes(searchTermLower);
 
     const matchesTier = !filterByTier || Math.abs(adv.tier - partyTier) <= TIER_FILTER_RANGE;
-    const matchesType = typeFilter === "all" || adv.type.toLowerCase() === typeFilter.toLowerCase();
+    const matchesType = typeFilter === "all" || getAdversaryType(adv) === typeFilter.toLowerCase();
 
     return matchesSearch && matchesTier && matchesType;
   });

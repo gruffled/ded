@@ -188,3 +188,11 @@ describe("filterAndSortAdversaries", () => {
     expect(result[2].tier).toBe(3);
   });
 });
+
+describe("filterAndSortAdversaries with incomplete records", () => {
+  it("does not throw when an adversary has no type", () => {
+    const adversaries = [{ name: "Mystery", tier: 1 }, { name: "Goblin", tier: 1, type: "Minion" }];
+    expect(filterAndSortAdversaries(adversaries, "gob", false, 1, "name")).toHaveLength(1);
+    expect(filterAndSortAdversaries(adversaries, "", false, 1, "name", "minion")).toHaveLength(1);
+  });
+});

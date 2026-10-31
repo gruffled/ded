@@ -1,9 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { ADJUSTMENT_VALUES } from "../constants";
+
+const MAX_PARTY_SIZE = 8;
+const MAX_PARTY_LEVEL = 10;
+
+/**
+ * Number input that lets the field be cleared while typing and only clamps
+ * the value (and snaps the text back) once it loses focus.
+ */
+function NumberField({ controlId, label, value, min, max, onChange }) {
+  const [draft, setDraft] = useState(null);
+
+  const handleChange = (e) => {
+    const text = e.target.value;
+    setDraft(text);
+    const parsed = parseInt(text, 10);
+    if (!Number.isNaN(parsed)) onChange(Math.min(max, Math.max(min, parsed)));
+  };
+
+  return (
+    <Form.Group as={Col} controlId={controlId}>
+      <Form.Label>{label}</Form.Label>
+      <Form.Control
+        type="number"
+        value={draft ?? value}
+        onChange={handleChange}
+        onBlur={() => setDraft(null)}
+        min={min}
+        max={max}
+      />
+    </Form.Group>
+  );
+}
 
 function Controls({
   partySize,
@@ -27,25 +59,22 @@ function Controls({
       <Card.Header as="h5">⚙️ Encounter Setup</Card.Header>
       <Card.Body>
         <Row className="mb-3">
-          <Form.Group as={Col} controlId="party-size">
-            <Form.Label>Party Size</Form.Label>
-            <Form.Control
-              type="number"
-              value={partySize}
-              onChange={(e) => setPartySize(Math.max(1, parseInt(e.target.value) || 1))}
-              min="1"
-            />
-          </Form.Group>
-          <Form.Group as={Col} controlId="party-level">
-            <Form.Label>Party Level</Form.Label>
-            <Form.Control
-              type="number"
-              value={partyLevel}
-              onChange={(e) => setPartyLevel(Math.min(10, Math.max(1, parseInt(e.target.value) || 1)))}
-              min="1"
-              max="10"
-            />
-          </Form.Group>
+          <NumberField
+            controlId="party-size"
+            label="Party Size"
+            value={partySize}
+            min={1}
+            max={MAX_PARTY_SIZE}
+            onChange={setPartySize}
+          />
+          <NumberField
+            controlId="party-level"
+            label="Party Level"
+            value={partyLevel}
+            min={1}
+            max={MAX_PARTY_LEVEL}
+            onChange={setPartyLevel}
+          />
         </Row>
 
         <h6 className="mt-4 mb-3">Difficulty Adjustments</h6>

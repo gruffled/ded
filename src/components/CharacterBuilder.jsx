@@ -273,6 +273,24 @@ function CharacterBuilder() {
     setNotice({ variant: "success", text: "Character saved in this browser." });
   };
 
+  const loadSaved = (id) => {
+    const record = savedCharacters.find((item) => item.id === id);
+    if (!record) return;
+    try {
+      setCharacter(loadCharacter(record));
+    } catch (error) {
+      setNotice({ variant: "danger", text: error.message });
+    }
+  };
+
+  const deleteCurrent = () => {
+    const record = savedCharacters.find((item) => item.id === character.id);
+    if (!record) return;
+    if (!window.confirm(`Delete saved character "${record.name || "Unnamed hero"}"?`)) return;
+    deleteCharacter(record.id);
+    setNotice({ variant: "success", text: "Saved character deleted." });
+  };
+
   const exportCharacter = () => {
     const blob = new Blob([serializeCharacter(character)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -428,7 +446,7 @@ function CharacterBuilder() {
       </div>
       {notice && <Alert variant={notice.variant} dismissible onClose={() => setNotice(null)}>{notice.text}</Alert>}
       <PrintableCharacterSheet character={character} selectedClass={selectedClass} selectedSubclass={selectedSubclass} stats={stats} />
-      {savedCharacters.length > 0 && <Card bg="dark" text="light" className="mb-3 border-secondary"><Card.Body className="py-2"><Stack direction="horizontal" gap={2}><Form.Select size="sm" aria-label="Saved characters" onChange={(event) => { const record = savedCharacters.find((item) => item.id === event.target.value); if (record) setCharacter(loadCharacter(record)); }}><option value="">Load a saved character...</option>{savedCharacters.map((record) => <option value={record.id} key={record.id}>{record.name || "Unnamed hero"}</option>)}</Form.Select><Button size="sm" variant="outline-danger" onClick={() => deleteCharacter(savedCharacters[savedCharacters.length - 1].id)}>Delete last saved</Button></Stack></Card.Body></Card>}
+      {savedCharacters.length > 0 && <Card bg="dark" text="light" className="mb-3 border-secondary"><Card.Body className="py-2"><Stack direction="horizontal" gap={2}><Form.Select size="sm" aria-label="Saved characters" value={savedCharacters.some((item) => item.id === character.id) ? character.id : ""} onChange={(event) => loadSaved(event.target.value)}><option value="">Load a saved character...</option>{savedCharacters.map((record) => <option value={record.id} key={record.id}>{record.name || "Unnamed hero"}</option>)}</Form.Select><Button size="sm" variant="outline-danger" disabled={!savedCharacters.some((item) => item.id === character.id)} onClick={deleteCurrent}>Delete saved</Button></Stack></Card.Body></Card>}
       <div className="mb-3">{STEPS.map((label, index) => <Button key={label} variant={step === index ? "primary" : "outline-secondary"} size="sm" className="me-2 mb-2" onClick={() => setStep(index)}>{index + 1}. {label}</Button>)}</div>
       <Row className="g-4">
         <Col lg={7}>{renderStep()}<div className="d-flex justify-content-between mt-3"><Button variant="outline-light" disabled={step === 0} onClick={() => setStep((current) => current - 1)}>Back</Button><Button variant="primary" disabled={step === STEPS.length - 1} onClick={() => setStep((current) => current + 1)}>Next</Button></div></Col>
