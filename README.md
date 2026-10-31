@@ -110,6 +110,24 @@ python3 scripts/adversary_extractor.py /path/to/DH_SRD.pdf public/environments.j
 Environments are kept separate from adversaries because they are encounter
 context and do not spend Battle Points.
 
+### Refreshing character data
+
+Everything the Character Builder knows about the rules comes from the SRD PDF
+too, so no class, card or weapon text is typed in by hand. Each script needs
+`pdftotext` (from poppler) and validates its output before writing:
+
+```sh
+python3 scripts/character_extractor.py /path/to/DH_SRD.pdf src/data
+python3 scripts/domain_card_extractor.py /path/to/DH_SRD.pdf src/data/domain-cards.json
+python3 scripts/equipment_extractor.py /path/to/DH_SRD.pdf src/data/equipment.json
+```
+
+These write `classes.json`, `ancestries.json`, `communities.json`,
+`domain-cards.json` and `equipment.json` (Tier 1 weapons and armor) under
+`src/data/`. The character and card scripts read fixed page ranges of the SRD 2.0 PDF; if a
+newer edition moves content, pass `--first-page` / `--last-page`. Run
+`make test-data` afterwards and review the diff.
+
 ## 📁 Project Structure
 
 ```
@@ -118,7 +136,8 @@ context and do not spend Battle Points.
 │   ├── adversaries.json    # Adversary database
 │   └── environments.json   # Environment database
 ├── 📂 src/
-│   ├── 📄 characterData.js  # Character creation reference data
+│   ├── 📂 data/            # SRD character data (generated)
+│   ├── 📄 characterData.js  # Loads the generated character data
 │   ├── 📄 characterUtils.js # Character validation and derived stats
 │   ├── 📂 components/      # React UI components
 │   ├── � test/            # Test setup and utilities

@@ -810,3 +810,8 @@ Col:last-child > * {
     transform: translateX(0);
   }
 }
+
+/* Domain card text keeps the SRD's paragraph and bullet line breaks. */
+.card-text {
+  white-space: pre-line;
+}

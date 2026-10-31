@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CLASSES, ARMOR } from "./characterData";
+import { ARMOR, CLASSES, PRIMARY_WEAPONS, SECONDARY_WEAPONS } from "./characterData";
 import { createInitialCharacter, getDerivedStats, isValidTraitAssignment, parseCharacter, serializeCharacter, validateCharacter } from "./characterUtils";
 
 describe("character utilities", () => {
@@ -62,5 +62,17 @@ describe("character utilities", () => {
     expect(stats.stress).toBe(7);
     expect(stats.majorThreshold).toBe(ARMOR[0].baseMajor + 1);
     expect(stats.severeThreshold).toBe(ARMOR[0].baseSevere + 1);
+  });
+
+  it("requires a secondary weapon only with a one-handed primary", () => {
+    const base = createInitialCharacter();
+    const oneHanded = PRIMARY_WEAPONS.find((weapon) => weapon.burden === 1);
+    const twoHanded = PRIMARY_WEAPONS.find((weapon) => weapon.burden === 2);
+    const secondary = SECONDARY_WEAPONS[0];
+    const messages = (changes) => validateCharacter({ ...base, ...changes }).join("|");
+    expect(messages({ primaryWeaponId: oneHanded.id })).toMatch(/secondary weapon with a one-handed/);
+    expect(messages({ primaryWeaponId: oneHanded.id, secondaryWeaponId: secondary.id })).not.toMatch(/secondary/);
+    expect(messages({ primaryWeaponId: twoHanded.id })).not.toMatch(/secondary/);
+    expect(messages({ primaryWeaponId: twoHanded.id, secondaryWeaponId: secondary.id })).toMatch(/can't be paired/);
   });
 });
