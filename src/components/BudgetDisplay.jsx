@@ -2,7 +2,6 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import ProgressBar from "react-bootstrap/ProgressBar";
 
 function BudgetDisplay({ budget, partyTier }) {
   const remainingColor = budget.remaining < 0 ? "text-danger" : "text-success";
@@ -12,18 +11,26 @@ function BudgetDisplay({ budget, partyTier }) {
 
   return (
     <Card bg="secondary" text="light" className="shadow-lg">
-      <Card.Header as="h5">
+      <Card.Header as="h2" className="h5">
         <i className="bi bi-bar-chart-fill me-2"></i>
         Battle Budget
       </Card.Header>
       <Card.Body>
         <div className="mb-4">
-          <ProgressBar
-            now={percentage}
-            variant={progressVariant}
-            style={{ height: "20px" }}
-            label={`${Math.round(percentage)}%`}
-          />
+          {/* Plain markup so the progressbar itself can carry an accessible name. */}
+          <div className="progress" style={{ height: "20px" }}>
+            <div
+              className={`progress-bar bg-${progressVariant}`}
+              role="progressbar"
+              style={{ width: `${percentage}%` }}
+              aria-valuenow={Math.round(percentage)}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label={`Battle Points spent: ${budget.spent} of ${budget.total}`}
+            >
+              {`${Math.round(percentage)}%`}
+            </div>
+          </div>
         </div>
         <Row className="text-center g-3">
           <Col xs={4}>

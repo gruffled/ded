@@ -41,7 +41,7 @@ function EnvironmentLibrary({
       text="light"
       className="h-100 d-flex flex-column shadow-lg border-start border-4 border-success"
     >
-      <Card.Header as="h5" className="d-flex align-items-center">
+      <Card.Header as="h2" className="h5 d-flex align-items-center">
         <span className="me-2">🌍</span>
         Environment Library
         <span className="ms-auto badge bg-success text-dark">

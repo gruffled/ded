@@ -7,9 +7,9 @@ function EnvironmentModal({ environment, onClose }) {
   if (!environment) return null;
 
   return (
-    <Modal show={!!environment} onHide={onClose} size="lg" centered>
+    <Modal show={!!environment} onHide={onClose} size="lg" centered aria-labelledby="environment-modal-title">
       <Modal.Header closeButton className="bg-dark text-light border-secondary">
-        <Modal.Title>{environment.name}</Modal.Title>
+        <Modal.Title as="h2" className="h4" id="environment-modal-title">{environment.name}</Modal.Title>
       </Modal.Header>
       <Modal.Body className="text-light" style={{ background: "linear-gradient(135deg, #28613d 0%, #000218 100%)" }}>
         <div className="d-flex align-items-center gap-3 mb-3">
@@ -26,7 +26,7 @@ function EnvironmentModal({ environment, onClose }) {
         </div>
         {environment.features?.length > 0 && (
           <>
-            <h5 className="mt-4">Features</h5>
+            <h3 className="h5 mt-4">Features</h3>
             <ListGroup variant="flush">
               {environment.features.map((feature, index) => (
                 <ListGroup.Item

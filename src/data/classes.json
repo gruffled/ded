@@ -142,8 +142,18 @@
             "description": "You can play three different types of songs, once each per long rest; describe how you perform for others to gain the listed benefit:\n• Relaxing Song: You and all allies within Close range clear a Hit Point.\n• Epic Song: Make a target within Close range temporarily Vulnerable.\n• Heartbreaking Song: You and all allies within Close range gain a Hope."
           }
         ],
-        "specialization": [],
-        "mastery": []
+        "specialization": [
+          {
+            "name": "Maestro",
+            "description": "Your rallying songs steel the courage of those who listen. When you give a Rally Die to an ally, they can gain a Hope or clear a Stress."
+          }
+        ],
+        "mastery": [
+          {
+            "name": "Virtuoso",
+            "description": "You are among the greatest of your craft and your skill is boundless. You can perform each of your “Gifted Performer” feature’s songs twice per long rest."
+          }
+        ]
       },
       {
         "id": "wordsmith",
@@ -160,8 +170,18 @@
             "description": "After you make an action roll to impress, persuade, or offend someone, you can spend a Hope to add a d4 to the roll."
           }
         ],
-        "specialization": [],
-        "mastery": []
+        "specialization": [
+          {
+            "name": "Eloquent",
+            "description": "Your moving words boost morale. Once per session, when you encourage an ally, you can do one of the following:\n• Allow them to find a mundane object or tool they need.\n• Help an Ally without spending Hope.\n• Give them an additional downtime move during their next rest."
+          }
+        ],
+        "mastery": [
+          {
+            "name": "Epic Poetry",
+            "description": "Your Rally Die increases to a d10. Additionally, when you Help an Ally, you can narrate the moment as if you were writing the tale of their heroism in a memoir. When you do, roll a d10 as your advantage die."
+          }
+        ]
       }
     ],
     "backgroundQuestions": [

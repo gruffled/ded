@@ -27,9 +27,9 @@ function AdversaryModal({ adversary, onClose }) {
     value === null || value === undefined ? "—" : value;
 
   return (
-    <Modal show={!!adversary} onHide={onClose} size="lg" centered>
+    <Modal show={!!adversary} onHide={onClose} size="lg" centered aria-labelledby="adversary-modal-title">
       <Modal.Header closeButton className="bg-dark text-light border-secondary">
-        <Modal.Title>{adversary.name}</Modal.Title>
+        <Modal.Title as="h2" className="h4" id="adversary-modal-title">{adversary.name}</Modal.Title>
       </Modal.Header>
       <Modal.Body
         className="modal-gradient text-light"
@@ -121,7 +121,7 @@ function AdversaryModal({ adversary, onClose }) {
         )}
         {allFeatures.length > 0 && (
           <>
-            <h5 className="mt-4">Features</h5>
+            <h3 className="h5 mt-4">Features</h3>
             <ListGroup variant="flush">
               {allFeatures.map((feature) => (
                 <ListGroup.Item
