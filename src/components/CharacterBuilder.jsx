@@ -21,7 +21,10 @@ import {
   STANDARD_INVENTORY,
   TRAIT_ARRAY,
 } from "../characterData";
-import { useCharacterBuilder, useSavedCharacters } from "../hooks";
+import LevelUpPanel from "./LevelUpPanel";
+import { useCharacterBuilder, useSavedCharacters } from "../characterHooks";
+import { getEffectiveTraits, getLevel, getProgress } from "../levelUp";
+import { getTier } from "../utils";
 import {
   getDerivedStats,
   getSelectedDomainCards,
@@ -29,7 +32,10 @@ import {
   validateCharacter,
 } from "../characterUtils";
 
-const STEPS = ["Identity & Class", "Heritage & Traits", "Equipment & Cards", "Story & Review"];
+const STEPS = ["Identity & Class", "Heritage & Traits", "Equipment & Cards", "Story & Review", "Level Up"];
+
+const tierGroups = (items, maxTier) =>
+  [1, 2, 3, 4].filter((tier) => tier <= maxTier).map((tier) => [tier, items.filter((item) => item.tier === tier)]);
 const formatTraitScore = (score) => score === null || score === undefined ? "—" : score > 0 ? `+${score}` : `${score}`;
 
 function SheetSigil() {
@@ -49,10 +55,19 @@ function PrintableCharacterSheet({ character, selectedClass, selectedSubclass, s
   const ancestryItems = character.ancestryIds.map((id) => ANCESTRIES.find((item) => item.id === id)).filter(Boolean);
   const community = COMMUNITIES.find((item) => item.id === character.communityId);
   const featureSources = character.ancestryFeatureSources ?? [0, 1];
+  const multiclassPick = getProgress(character).multiclass;
+  const multiclassClass = CLASSES.find((item) => item.id === multiclassPick?.classId);
+  const multiclassDetails = multiclassClass && {
+    class: multiclassClass,
+    feature: multiclassClass.features.find((item) => item.name === multiclassPick.featureName),
+    subclass: multiclassClass.subclasses.find((item) => item.id === multiclassPick.subclassId),
+  };
   const ancestryFeatures = ancestryItems.length === 1
     ? ancestryItems[0]?.features ?? []
     : [0, 1].map((featureIndex) => ancestryItems[featureSources[featureIndex]]?.features[featureIndex]).filter(Boolean);
   const domainCards = getSelectedDomainCards(character);
+  const progress = getProgress(character);
+  const traits = getEffectiveTraits(character);
   const field = (label, value) => <div className="official-field"><span>{label}</span><strong>{value || "—"}</strong></div>;
 
   return (
@@ -61,7 +76,7 @@ function PrintableCharacterSheet({ character, selectedClass, selectedSubclass, s
         <div className="official-sheet-heading">
           <SheetSigil />
           <div className="official-heading-copy"><span> DAGGERHEART · FIELD RECORD</span><strong>CHARACTER SHEET</strong></div>
-          <div className="official-heading-meta"><span>LEVEL {character.level}</span><small>{selectedClass?.name || "UNASSIGNED"}</small></div>
+          <div className="official-heading-meta"><span>LEVEL {stats.level}</span><small>{selectedClass?.name || "UNASSIGNED"}</small></div>
         </div>
         <div className="official-identity-row">
           {field("Name", character.name)}
@@ -74,11 +89,11 @@ function PrintableCharacterSheet({ character, selectedClass, selectedSubclass, s
         <div className="official-top-grid">
           <div className="official-traits">
             <div className="official-section-label">TRAITS</div>
-            <div className="official-trait-grid">{CHARACTER_TRAITS.map(({ id, name }) => <div className="official-trait" key={id}><div className="official-trait-name">{name.toUpperCase()} <b>{formatTraitScore(character.traits[id])}</b></div></div>)}</div>
+            <div className="official-trait-grid">{CHARACTER_TRAITS.map(({ id, name }) => <div className="official-trait" key={id}><div className="official-trait-name">{name.toUpperCase()} <b>{formatTraitScore(traits[id])}</b></div></div>)}</div>
           </div>
           <div className="official-stat-column">
-            <div className="official-column-kicker">COMBAT PROFILE <span>LEVEL {character.level}</span></div>
-            <div className="official-stat-grid">{[["Evasion", stats.evasion], ["Armor", stats.armorScore], ["Level", character.level], ["Proficiency", stats.proficiency]].map(([label, value]) => <div className="official-stat" key={label}><span>{label}</span><strong>{value}</strong></div>)}</div>
+            <div className="official-column-kicker">COMBAT PROFILE <span>LEVEL {stats.level}</span></div>
+            <div className="official-stat-grid">{[["Evasion", stats.evasion], ["Armor", stats.armorScore], ["Level", stats.level], ["Proficiency", stats.proficiency]].map(([label, value]) => <div className="official-stat" key={label}><span>{label}</span><strong>{value}</strong></div>)}</div>
             <div className="official-track-grid">{[["Hope", 6], ["Stress", stats.stress], ["HP", stats.hitPoints], ["Active Armor", stats.armorScore]].map(([label, count]) => <div className="official-track" key={label}><span>{label}</span><div>{Array.from({ length: Math.min(count || 0, 10) }, (_, index) => <i key={index} />)}</div></div>)}</div>
             <div className="official-thresholds"><span>DAMAGE THRESHOLDS</span><strong>Minor {stats.majorThreshold - 1} · Major {stats.majorThreshold} · Severe {stats.severeThreshold}</strong></div>
           </div>
@@ -95,7 +110,7 @@ function PrintableCharacterSheet({ character, selectedClass, selectedSubclass, s
             <div className="official-section-label">INVENTORY</div>
             <div className="official-inventory">{[...character.inventory, character.potion, character.classItem].filter(Boolean).map((item, index) => <div key={`${item}-${index}`}><i />{item}</div>)}</div>
             <div className="official-section-label">EXPERIENCE</div>
-            <div className="official-experiences">{character.experiences.map((experience, index) => <div key={index}><i />{experience.name || ""}<b>+{experience.modifier}</b></div>)}</div>
+            <div className="official-experiences">{progress.experiences.map((experience, index) => <div key={index}><i />{experience.name || ""}<b>+{experience.modifier}</b></div>)}</div>
             <div className="official-section-label">DESCRIPTION</div>
             <div className="official-writing">{character.description || ""}</div>
           </div>
@@ -117,6 +132,8 @@ function PrintableCharacterSheet({ character, selectedClass, selectedSubclass, s
             {selectedClass?.features?.map((item) => <div className="official-text-block" key={item.name}><strong>{item.name}</strong><span className="card-text">{item.description}</span></div>)}
             <div className="official-section-label">SUBCLASS FOUNDATION</div>
             <div className="official-text-block"><strong>{selectedSubclass?.name || "—"}</strong><span className="card-text">{selectedSubclass?.foundation?.description || ""}</span></div>
+            {progress.subclassUpgrades.map((upgrade) => selectedSubclass?.[upgrade]?.length > 0 && <div className="official-text-block" key={upgrade}><strong>{selectedSubclass.name} · {upgrade}</strong><span className="card-text">{selectedSubclass[upgrade].map((item) => `${item.name}: ${item.description}`).join("\n")}</span></div>)}
+            {multiclassDetails && <div className="official-text-block"><strong>Multiclass · {multiclassDetails.class.name} ({progress.multiclass.domain})</strong><span className="card-text">{[multiclassDetails.feature && `${multiclassDetails.feature.name}: ${multiclassDetails.feature.description}`, multiclassDetails.subclass && `${multiclassDetails.subclass.name} foundation:\n${multiclassDetails.subclass.foundation.description}`].filter(Boolean).join("\n")}</span></div>}
             <div className="official-section-label">HERITAGE</div>
             {ancestryFeatures.map((item) => <div className="official-text-block" key={item.name}><strong>{item.name}</strong><span className="card-text">{item.description}</span></div>)}
             {community?.feature && <div className="official-text-block"><strong>{community.name}: {community.feature.name}</strong><span className="card-text">{community.feature.description}</span></div>}
@@ -141,6 +158,8 @@ function PrintableCharacterSheet({ character, selectedClass, selectedSubclass, s
 
 function CharacterSheet({ character, selectedClass, selectedSubclass, stats, onPrint }) {
   const domainCards = getSelectedDomainCards(character);
+  const progress = getProgress(character);
+  const traits = getEffectiveTraits(character);
   const primaryWeapon = PRIMARY_WEAPONS.find((weapon) => weapon.id === character.primaryWeaponId);
   const secondaryWeapon = SECONDARY_WEAPONS.find((weapon) => weapon.id === character.secondaryWeaponId);
   const armor = ARMOR.find((item) => item.id === character.armorId);
@@ -171,7 +190,7 @@ function CharacterSheet({ character, selectedClass, selectedSubclass, stats, onP
               {selectedSubclass ? ` · ${selectedSubclass.name}` : ""}
             </div>
           </div>
-          <Badge bg="warning" text="dark">Level {character.level}</Badge>
+          <Badge bg="warning" text="dark">Level {stats.level}</Badge>
         </div>
 
         <div className="small mb-3">
@@ -207,7 +226,7 @@ function CharacterSheet({ character, selectedClass, selectedSubclass, stats, onP
             <strong>Traits</strong>
             <div className="d-flex flex-wrap gap-2 mt-2">
               {CHARACTER_TRAITS.map(({ id, name }) => (
-                <Badge bg="primary" key={id}>{name} {formatTraitScore(character.traits[id])}</Badge>
+                <Badge bg="primary" key={id}>{name} {formatTraitScore(traits[id])}</Badge>
               ))}
             </div>
           </ListGroup.Item>
@@ -221,7 +240,7 @@ function CharacterSheet({ character, selectedClass, selectedSubclass, stats, onP
           </ListGroup.Item>
           <ListGroup.Item className="bg-dark text-light border-secondary">
             <strong>Experiences</strong>
-            <div className="small mt-1">{character.experiences.map((experience) => experience.name || "Unnamed").join(" · ")}</div>
+            <div className="small mt-1">{progress.experiences.map((experience) => `${experience.name || "Unnamed"} +${experience.modifier}`).join(" · ")}</div>
           </ListGroup.Item>
           <ListGroup.Item className="bg-dark text-light border-secondary">
             <strong>Domain cards</strong>
@@ -260,7 +279,10 @@ function CharacterBuilder() {
 
   const selectedClass = useMemo(() => CLASSES.find((item) => item.id === character.classId), [character.classId]);
   const selectedSubclass = selectedClass?.subclasses.find((item) => item.id === character.subclassId);
-  const stats = useMemo(() => getDerivedStats(character, CLASSES, ARMOR), [character]);
+  const stats = useMemo(() => {
+    const derived = getDerivedStats(character, CLASSES, ARMOR);
+    return { ...derived, tier: getTier(getLevel(character)) };
+  }, [character]);
   const errors = useMemo(() => validateCharacter(character), [character]);
   const domainCards = useMemo(
     () => LEVEL_ONE_DOMAIN_CARDS.filter((card) => selectedClass?.domains.includes(card.domain)),
@@ -321,7 +343,9 @@ function CharacterBuilder() {
 
   const handleClassChange = (classId) => {
     const nextClass = CLASSES.find((item) => item.id === classId);
-    updateCharacter({ classId, subclassId: nextClass?.subclasses[0]?.id ?? "", primaryWeaponId: "", secondaryWeaponId: "", domainCardIds: [] });
+    const hasLevelUps = (character.levelUps ?? []).length > 0;
+    if (hasLevelUps && !window.confirm("Changing class resets this character to level 1. Continue?")) return;
+    updateCharacter({ classId, subclassId: nextClass?.subclasses[0]?.id ?? "", primaryWeaponId: "", secondaryWeaponId: "", domainCardIds: [], levelUps: [], level: 1 });
   };
 
   const handleAncestryChange = (index, value) => {
@@ -398,9 +422,9 @@ function CharacterBuilder() {
           <Card.Header as="h5">Step 3 · Starting equipment and domain cards</Card.Header>
           <Card.Body>
             <Row className="g-3">
-              <Col md={6}><Form.Group controlId="character-primary-weapon"><Form.Label>Primary weapon</Form.Label><Form.Select value={character.primaryWeaponId} onChange={(event) => updateCharacter({ primaryWeaponId: event.target.value, secondaryWeaponId: "" })}><option value="">Choose a primary weapon...</option>{PRIMARY_WEAPONS.map((weapon) => <option value={weapon.id} key={weapon.id}>{weapon.name} · {weapon.trait} · {weapon.range} · {weapon.die}{weapon.bonus ? `+${weapon.bonus}` : ""}</option>)}</Form.Select></Form.Group></Col>
-              <Col md={6}><Form.Group controlId="character-secondary-weapon"><Form.Label>Secondary weapon <span className="text-secondary">(optional)</span></Form.Label><Form.Select value={character.secondaryWeaponId} disabled={!selectedPrimary || selectedPrimary.burden === 2} onChange={(event) => updateCharacter({ secondaryWeaponId: event.target.value })}><option value="">None</option>{SECONDARY_WEAPONS.map((weapon) => <option value={weapon.id} key={weapon.id}>{weapon.name} · {weapon.trait} · {weapon.range}</option>)}</Form.Select></Form.Group></Col>
-              <Col md={6}><Form.Group controlId="character-armor"><Form.Label>Armor</Form.Label><Form.Select value={character.armorId} onChange={(event) => updateCharacter({ armorId: event.target.value })}><option value="">Choose armor...</option>{ARMOR.map((item) => <option value={item.id} key={item.id}>{item.name} · {item.baseMajor}/{item.baseSevere} · Armor {item.baseScore}</option>)}</Form.Select></Form.Group></Col>
+              <Col md={6}><Form.Group controlId="character-primary-weapon"><Form.Label>Primary weapon</Form.Label><Form.Select value={character.primaryWeaponId} onChange={(event) => updateCharacter({ primaryWeaponId: event.target.value, secondaryWeaponId: "" })}><option value="">Choose a primary weapon...</option>{tierGroups(PRIMARY_WEAPONS, stats.tier).map(([tier, items]) => <optgroup label={`Tier ${tier}`} key={tier}>{items.map((weapon) => <option value={weapon.id} key={weapon.id}>{weapon.name} · {weapon.trait} · {weapon.range} · {weapon.die}{weapon.bonus ? `+${weapon.bonus}` : ""}</option>)}</optgroup>)}</Form.Select></Form.Group></Col>
+              <Col md={6}><Form.Group controlId="character-secondary-weapon"><Form.Label>Secondary weapon <span className="text-secondary">(optional)</span></Form.Label><Form.Select value={character.secondaryWeaponId} disabled={!selectedPrimary || selectedPrimary.burden === 2} onChange={(event) => updateCharacter({ secondaryWeaponId: event.target.value })}><option value="">None</option>{tierGroups(SECONDARY_WEAPONS, stats.tier).map(([tier, items]) => <optgroup label={`Tier ${tier}`} key={tier}>{items.map((weapon) => <option value={weapon.id} key={weapon.id}>{weapon.name} · {weapon.trait} · {weapon.range}</option>)}</optgroup>)}</Form.Select></Form.Group></Col>
+              <Col md={6}><Form.Group controlId="character-armor"><Form.Label>Armor</Form.Label><Form.Select value={character.armorId} onChange={(event) => updateCharacter({ armorId: event.target.value })}><option value="">Choose armor...</option>{tierGroups(ARMOR, stats.tier).map(([tier, items]) => <optgroup label={`Tier ${tier}`} key={tier}>{items.map((item) => <option value={item.id} key={item.id}>{item.name} · {item.baseMajor}/{item.baseSevere} · Armor {item.baseScore}</option>)}</optgroup>)}</Form.Select></Form.Group></Col>
               <Col md={6}><Form.Group controlId="character-class-item"><Form.Label>Class item</Form.Label><Form.Select value={character.classItem} disabled={!selectedClass} onChange={(event) => updateCharacter({ classItem: event.target.value })}><option value="">Choose an item...</option>{selectedClass?.items.map((item) => <option value={item} key={item}>{item}</option>)}</Form.Select></Form.Group></Col>
               <Col md={6}><Form.Group controlId="character-starting-potion"><Form.Label>Starting potion</Form.Label><Form.Select value={character.potion} onChange={(event) => updateCharacter({ potion: event.target.value })}><option>Minor Health Potion</option><option>Minor Stamina Potion</option></Form.Select></Form.Group></Col>
             </Row>
@@ -412,6 +436,9 @@ function CharacterBuilder() {
           </Card.Body>
         </Card>
       );
+    }
+    if (step === 4) {
+      return <LevelUpPanel character={character} onChange={updateCharacter} selectedClass={selectedClass} selectedSubclass={selectedSubclass} />;
     }
     return (
       <Card bg="secondary" text="light" className="shadow-lg border-start border-4 border-warning">
@@ -434,7 +461,7 @@ function CharacterBuilder() {
   return (
     <div className="character-builder">
       <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-        <div><h2 className="mb-1">🧙 Character Builder</h2><p className="text-secondary mb-0">Create a level-1 Daggerheart character.</p></div>
+        <div><h2 className="mb-1">🧙 Character Builder</h2><p className="text-secondary mb-0">Create a Daggerheart character and level it up to level 10.</p></div>
         <ButtonGroup>
           <Button variant="outline-danger" onClick={resetCharacter}>Clear character</Button>
           <Button variant="outline-success" onClick={save}>Save</Button>

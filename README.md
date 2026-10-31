@@ -21,7 +21,8 @@ A modern web-based character and encounter designer for the Daggerheart tabletop
 ## ✨ Features
 
 - 🎲 **Encounter Builder** - Build balanced encounters with automatic battle point calculations
-- 🧙 **Character Builder** - Create level-1 characters with class, heritage, traits, equipment, and domain cards
+- 🧙 **Character Builder** - Create characters with class, heritage, traits, equipment, and domain cards
+- 📈 **Level Up** - Take a character from level 1 to 10: tier achievements, advancements, upgraded subclass cards, multiclassing, new domain cards, and higher-tier gear
 - 💾 **Character Files** - Save characters in the browser and import/export JSON backups
 - 🖨️ **Custom Character Printout** - Print a two-page sheet with an original, official-inspired character sheet and class-guide layout
 - 📚 **Adversary Library** - Browse and search a comprehensive library of creatures
@@ -123,10 +124,14 @@ python3 scripts/equipment_extractor.py /path/to/DH_SRD.pdf src/data/equipment.js
 ```
 
 These write `classes.json`, `ancestries.json`, `communities.json`,
-`domain-cards.json` and `equipment.json` (Tier 1 weapons and armor) under
-`src/data/`. The character and card scripts read fixed page ranges of the SRD 2.0 PDF; if a
+`domain-cards.json` (levels 1–10) and `equipment.json` (weapons and armor for
+every tier) under `src/data/`. The character and card scripts read fixed page ranges of the SRD 2.0 PDF; if a
 newer edition moves content, pass `--first-page` / `--last-page`. Run
 `make test-data` afterwards and review the diff.
+
+The level-up advancement options and slot counts are not in the SRD text; they
+are transcribed from the official character sheets linked above into
+`src/levelUp.js`.
 
 ## 📁 Project Structure
 

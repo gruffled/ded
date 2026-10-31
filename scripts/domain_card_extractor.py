@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract level-1 Daggerheart SRD 2.0 domain cards into JSON.
+"""Extract Daggerheart SRD 2.0 domain cards (levels 1-10) into JSON.
 
 The domain card reference appendix is laid out in two columns, so each page is
 cropped into a left and a right half before text extraction. That keeps every
@@ -96,8 +96,9 @@ def split_grimoire_spells(description: str) -> str:
     return SPELL_BREAK_RE.sub("\n", description)
 
 
-def parse_cards(text: str, level: int = 1) -> list[dict]:
-    lines = [line.strip() for line in normalize(text).split("\n")]
+def parse_cards(text: str, level: int | None = None) -> list[dict]:
+    # Single characters are vertical sidebar letters from the page margins.
+    lines = [line for line in (raw.strip() for raw in normalize(text).split("\n")) if len(line) != 1]
     headers = []
     for index, line in enumerate(lines):
         match = LEVEL_RE.match(line)
@@ -125,7 +126,7 @@ def parse_cards(text: str, level: int = 1) -> list[dict]:
     cards = []
     for position, header in enumerate(headers):
         end = headers[position + 1]["name_index"] if position + 1 < len(headers) else len(lines)
-        if header["level"] != level:
+        if level is not None and header["level"] != level:
             continue
         body = format_body(lines[header["body_start"]:end])
         if header["type"] == "Grimoire":
@@ -176,7 +177,7 @@ def main() -> int:
     validate(cards)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(cards, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"Extracted and validated {len(cards)} level-1 domain cards to {args.output}")
+    print(f"Extracted and validated {len(cards)} domain cards to {args.output}")
     return 0
 
 

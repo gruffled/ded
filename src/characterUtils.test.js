@@ -75,4 +75,61 @@ describe("character utilities", () => {
     expect(messages({ primaryWeaponId: twoHanded.id })).not.toMatch(/secondary/);
     expect(messages({ primaryWeaponId: twoHanded.id, secondaryWeaponId: secondary.id })).toMatch(/can't be paired/);
   });
+
+  it("keeps level-ups through an export and import", () => {
+    const original = { ...createInitialCharacter(), name: "Ari" };
+    original.levelUps = [{
+      experience: "Fixer",
+      picks: [{ option: "traits", tier: 2, traits: ["agility", "finesse"] }, { option: "hp", tier: 2 }],
+      domainCardId: "rune-ward",
+      exchange: null,
+    }];
+    original.level = 2;
+    expect(parseCharacter(serializeCharacter(original))).toEqual(original);
+  });
+
+  it("repairs malformed level-ups from an imported file", () => {
+    const parsed = parseCharacter({
+      format: "daggerheart-character",
+      version: 1,
+      character: {
+        levelUps: [
+          null,
+          { experience: 7, picks: [{ option: "bogus" }, { option: "traits", tier: "2", traits: "agility" }, { option: "hp", tier: 2 }], exchange: "x" },
+        ],
+      },
+    });
+    expect(parsed.levelUps).toHaveLength(2);
+    expect(parsed.level).toBe(3);
+    expect(parsed.levelUps[1].experience).toBe("");
+    expect(parsed.levelUps[1].picks).toEqual([{ option: "traits", tier: 0, traits: [] }, { option: "hp", tier: 2 }]);
+    expect(parsed.levelUps[1].exchange).toBeNull();
+    expect(() => validateCharacter(parsed)).not.toThrow();
+  });
+
+  it("derives level, proficiency and slots from level-ups", () => {
+    const character = createInitialCharacter();
+    character.classId = CLASSES[0].id;
+    character.armorId = ARMOR[0].id;
+    character.levelUps = [{
+      experience: "Fixer",
+      picks: [{ option: "hp", tier: 2 }, { option: "evasion", tier: 2 }],
+      domainCardId: "",
+      exchange: null,
+    }];
+    const stats = getDerivedStats(character, CLASSES, ARMOR);
+    expect(stats.level).toBe(2);
+    expect(stats.proficiency).toBe(2);
+    expect(stats.hitPoints).toBe(CLASSES[0].hp + 1);
+    expect(stats.evasion).toBe(CLASSES[0].evasion + 1);
+    expect(stats.majorThreshold).toBe(ARMOR[0].baseMajor + 2);
+  });
+
+  it("won't let a low-level character equip higher-tier gear", () => {
+    const character = createInitialCharacter();
+    const gear = ARMOR.find((item) => item.tier === 2);
+    expect(validateCharacter({ ...character, armorId: gear.id }).join()).toMatch(/higher tier/);
+    const stronger = { ...character, armorId: gear.id, levelUps: [{ experience: "", picks: [], domainCardId: "", exchange: null }] };
+    expect(validateCharacter(stronger).join()).not.toMatch(/higher tier/);
+  });
 });

@@ -4,9 +4,21 @@ import {
   CLASSES,
   LEVEL_ONE_DOMAIN_CARDS,
   PRIMARY_WEAPONS,
+  SECONDARY_WEAPONS,
   STANDARD_INVENTORY,
   TRAIT_ARRAY,
 } from "./characterData";
+import {
+  MAX_HP_SLOTS,
+  MAX_LEVEL,
+  MAX_STRESS_SLOTS,
+  getCard,
+  getLevel,
+  getOption,
+  getProgress,
+  validateLevelUps,
+} from "./levelUp";
+import { getTier } from "./utils";
 
 export const initialTraits = () =>
   Object.fromEntries(CHARACTER_TRAITS.map(({ id }) => [id, null]));
@@ -16,6 +28,7 @@ export const createInitialCharacter = () => ({
   pronouns: "",
   description: "",
   level: 1,
+  levelUps: [],
   classId: "",
   subclassId: "",
   ancestryIds: [],
@@ -41,8 +54,9 @@ export const isValidTraitAssignment = (traits) =>
   CHARACTER_TRAITS.map(({ id }) => traits[id]).sort((a, b) => b - a).join(",") ===
   [...TRAIT_ARRAY].sort((a, b) => b - a).join(",");
 
+/** Every domain card the character owns, level-1 picks first. */
 export const getSelectedDomainCards = (character) =>
-  LEVEL_ONE_DOMAIN_CARDS.filter((card) => character.domainCardIds.includes(card.id));
+  getProgress(character).cardIds.map(getCard).filter(Boolean);
 
 export const getDerivedStats = (character, classes, armor) => {
   const selectedClass = classes.find((item) => item.id === character.classId);
@@ -55,16 +69,18 @@ export const getDerivedStats = (character, classes, armor) => {
   const hitPointBonus = ancestryHas("giant") ? 1 : 0;
   const stressBonus = ancestryHas("human") ? 1 : 0;
   const thresholdBonus = ancestryHas("earthkin") ? 1 : 0;
+  const progress = getProgress(character);
+  const level = progress.level;
   return {
-    level: character.level,
-    evasion: (selectedClass?.evasion ?? 0) + evasionBonus,
-    hitPoints: (selectedClass?.hp ?? 0) + hitPointBonus,
-    stress: 6 + stressBonus,
+    level,
+    evasion: (selectedClass?.evasion ?? 0) + evasionBonus + progress.evasion,
+    hitPoints: Math.min(MAX_HP_SLOTS, (selectedClass?.hp ?? 0) + hitPointBonus + progress.hitPoints),
+    stress: Math.min(MAX_STRESS_SLOTS, 6 + stressBonus + progress.stress),
     hope: 2,
-    proficiency: 1,
+    proficiency: progress.proficiency,
     armorScore: (selectedArmor ? armorData.baseScore : 0) + armorScoreBonus,
-    majorThreshold: (selectedArmor ? armorData.baseMajor + character.level : character.level) + thresholdBonus,
-    severeThreshold: (selectedArmor ? armorData.baseSevere + character.level : character.level * 2) + thresholdBonus,
+    majorThreshold: (selectedArmor ? armorData.baseMajor + level : level) + thresholdBonus,
+    severeThreshold: (selectedArmor ? armorData.baseSevere + level : level * 2) + thresholdBonus,
   };
 };
 
@@ -86,6 +102,16 @@ export const validateCharacter = (character) => {
   const selectedCards = LEVEL_ONE_DOMAIN_CARDS.filter((card) => character.domainCardIds.includes(card.id));
   if (character.domainCardIds.length !== 2 || selectedCards.length !== 2) errors.push("Choose exactly two level-1 domain cards.");
   if (selectedClass && selectedCards.some((card) => !selectedClass.domains.includes(card.domain))) errors.push("Choose domain cards from your class’s two domains.");
+  const tier = getTier(getLevel(character));
+  const gear = [
+    [PRIMARY_WEAPONS, character.primaryWeaponId],
+    [SECONDARY_WEAPONS, character.secondaryWeaponId],
+    [ARMOR, character.armorId],
+  ];
+  if (gear.some(([list, id]) => (list.find((item) => item.id === id)?.tier ?? 0) > tier)) {
+    errors.push("You can't equip weapons or armor of a higher tier than your own.");
+  }
+  errors.push(...validateLevelUps(character));
   return errors;
 };
 
@@ -104,6 +130,41 @@ const stringList = (value, fallback) =>
   Array.isArray(value) && value.every((item) => typeof item === "string")
     ? value
     : fallback;
+
+const text = (value) => (typeof value === "string" ? value : "");
+const strings = (value) => (Array.isArray(value) ? value.filter((item) => typeof item === "string") : []);
+const integers = (value) => (Array.isArray(value) ? value.filter(Number.isInteger) : []);
+
+const sanitizePick = (pick) => {
+  const base = { option: pick.option, tier: Number.isInteger(pick.tier) ? pick.tier : 0 };
+  if (pick.option === "traits") return { ...base, traits: strings(pick.traits) };
+  if (pick.option === "experiences") return { ...base, experiences: integers(pick.experiences) };
+  if (pick.option === "domainCard") return { ...base, cardId: text(pick.cardId) };
+  if (pick.option === "multiclass") {
+    return {
+      ...base,
+      classId: text(pick.classId),
+      domain: text(pick.domain),
+      featureName: text(pick.featureName),
+      subclassId: text(pick.subclassId),
+    };
+  }
+  return base;
+};
+
+const sanitizeLevelUps = (value) =>
+  (Array.isArray(value) ? value : []).slice(0, MAX_LEVEL - 1).map((entry) => {
+    const source = entry && typeof entry === "object" ? entry : {};
+    const exchange = source.exchange && typeof source.exchange === "object" ? source.exchange : null;
+    return {
+      experience: text(source.experience),
+      picks: (Array.isArray(source.picks) ? source.picks : [])
+        .filter((pick) => pick && typeof pick === "object" && getOption(pick.option))
+        .map(sanitizePick),
+      domainCardId: text(source.domainCardId),
+      exchange: exchange ? { fromId: text(exchange.fromId), toId: text(exchange.toId) } : null,
+    };
+  });
 
 /**
  * Parse an exported/stored character. Imported files are untrusted, so every
@@ -124,7 +185,6 @@ export const parseCharacter = (raw) => {
   if (typeof source.id === "string") character.id = source.id;
   if (typeof source.updatedAt === "string") character.updatedAt = source.updatedAt;
 
-  character.level = Number.isInteger(source.level) ? source.level : defaults.level;
   for (const key of ["ancestryIds", "domainCardIds", "backgroundAnswers", "inventory"]) {
     character[key] = stringList(source[key], defaults[key]);
   }
@@ -141,6 +201,8 @@ export const parseCharacter = (raw) => {
       modifier: Number.isFinite(experience?.modifier) ? experience.modifier : fallback.modifier,
     };
   });
+  character.levelUps = sanitizeLevelUps(source.levelUps);
+  character.level = getLevel(character);
   character.connections = Array.isArray(source.connections)
     ? source.connections.filter((item) => item && typeof item === "object")
     : defaults.connections;
