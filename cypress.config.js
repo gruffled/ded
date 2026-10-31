@@ -7,5 +7,7 @@ export default defineConfig({
     supportFile: false,
     screenshotOnRunFailure: true,
     video: false,
+    // Keep memory flat across a long run; we never use time-travel snapshots in CI.
+    numTestsKeptInMemory: 0,
   },
 });
