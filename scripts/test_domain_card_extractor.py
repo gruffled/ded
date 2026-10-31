@@ -27,6 +27,7 @@ Place tokens on this card.
 \u25e6 Spend a token to deal damage.
 \u25e6 Clear unspent tokens.
 216 Daggerheart SRD
+e
 COUNTERSPELL
 Level 3 Arcana Spell
 Recall Cost: 2
@@ -40,10 +41,15 @@ Alpha: Do the first thing. Beta Spell: Do the second thing.
 
 class DomainCardExtractorTest(unittest.TestCase):
     def setUp(self):
-        self.cards = {card["name"]: card for card in extractor.parse_cards(COLUMN_FIXTURE)}
+        self.cards = {card["name"]: card for card in extractor.parse_cards(COLUMN_FIXTURE, level=1)}
 
     def test_only_requested_level_is_extracted(self):
         self.assertEqual(set(self.cards), {"Rune Ward", "Unleash Chaos", "Book of Test"})
+
+    def test_all_levels_are_extracted_by_default(self):
+        names = {card["name"]: card["level"] for card in extractor.parse_cards(COLUMN_FIXTURE)}
+        self.assertEqual(names["Counterspell"], 3)
+        self.assertEqual(names["Rune Ward"], 1)
 
     def test_metadata_is_parsed(self):
         card = self.cards["Rune Ward"]
@@ -81,6 +87,9 @@ class BundledDomainCardsTest(unittest.TestCase):
 
     def test_bundled_cards_validate(self):
         extractor.validate(self.cards)
+
+    def test_cards_cover_levels_one_to_ten(self):
+        self.assertEqual({card["level"] for card in self.cards}, set(range(1, 11)))
 
     def test_every_domain_has_cards_to_choose_from(self):
         counts = {}

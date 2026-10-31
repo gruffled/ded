@@ -44,7 +44,7 @@ export const ANCESTRIES = ancestries;
 
 export const COMMUNITIES = communities;
 
-// Tier 1 equipment, generated from the SRD by scripts/equipment_extractor.py.
+// Equipment for every tier, generated from the SRD by scripts/equipment_extractor.py.
 export const PRIMARY_WEAPONS = equipment.primaryWeapons;
 
 export const SECONDARY_WEAPONS = equipment.secondaryWeapons;
@@ -52,10 +52,12 @@ export const SECONDARY_WEAPONS = equipment.secondaryWeapons;
 export const ARMOR = equipment.armor;
 
 // Generated from the SRD by scripts/domain_card_extractor.py.
-export const LEVEL_ONE_DOMAIN_CARDS = domainCards.map((card) => ({
+export const DOMAIN_CARDS = domainCards.map((card) => ({
   ...card,
   id: card.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
 }));
+
+export const LEVEL_ONE_DOMAIN_CARDS = DOMAIN_CARDS.filter((card) => card.level === 1);
 
 export const STANDARD_INVENTORY = [
   "Torch",

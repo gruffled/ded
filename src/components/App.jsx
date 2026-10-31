@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { Suspense, lazy, useState, useMemo } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -15,7 +15,8 @@ import EncounterList from "./EncounterList";
 import AdversaryModal from "./AdversaryModal";
 import EnvironmentModal from "./EnvironmentModal";
 import Footer from "./Footer";
-import CharacterBuilder from "./CharacterBuilder";
+// Loaded on demand: it carries the bundled SRD character data.
+const CharacterBuilder = lazy(() => import("./CharacterBuilder"));
 
 // Import custom hooks and utilities
 import { useAdversaryData, useEnvironmentData, useEncounter } from "../hooks";
@@ -102,7 +103,7 @@ function App() {
           Encounter Builder
         </Button>
       </ButtonGroup>
-      {appMode === "character" ? <CharacterBuilder /> : <Row>
+      {appMode === "character" ? <Suspense fallback={<p className="text-center">Loading character builder...</p>}><CharacterBuilder /></Suspense> : <Row>
         <Col lg={4}>
           <div className="d-flex flex-column gap-4">
             <Controls

@@ -260,7 +260,9 @@ h6 {
     padding: 0 !important;
   }
 
-  .character-builder > *:not(.official-print-sheet) {
+  .character-builder > *:not(.official-print-sheet),
+  .container-fluid > header,
+  .container-fluid > .btn-group {
     display: none !important;
   }
 
@@ -278,16 +280,19 @@ h6 {
     line-height: 1.25;
   }
 
+  .official-page:last-child {
+    break-after: auto;
+  }
+
   .official-page {
     position: relative;
-    min-height: 10.25in;
+    min-height: 10.2in;
     box-sizing: border-box;
-    page-break-after: always;
+    break-after: page;
     border: 1px solid var(--sheet-ink);
     border-radius: 0.08in;
     background: var(--sheet-paper);
     padding: 0.16in;
-    break-after: page;
   }
 
   .official-page::after {
