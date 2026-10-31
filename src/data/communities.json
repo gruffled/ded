@@ -1,0 +1,122 @@
+[
+  {
+    "id": "duneborne",
+    "name": "Duneborne",
+    "feature": {
+      "name": "Oasis",
+      "description": "During a short rest, you or an ally can reroll a die used for a downtime move and take the higher result."
+    }
+  },
+  {
+    "id": "freeborne",
+    "name": "Freeborne",
+    "feature": {
+      "name": "Unbound",
+      "description": "Once per session when you roll with Fear, you can change it into a roll with Hope instead."
+    }
+  },
+  {
+    "id": "frostborne",
+    "name": "Frostborne",
+    "feature": {
+      "name": "Hardy",
+      "description": "When you take a rest, you clear a Hit Point."
+    }
+  },
+  {
+    "id": "hearthborne",
+    "name": "Hearthborne",
+    "feature": {
+      "name": "Close-Knit",
+      "description": "Once per long rest, you can spend any number of Hope to grant an ally within Far range an equal number of Hope."
+    }
+  },
+  {
+    "id": "highborne",
+    "name": "Highborne",
+    "feature": {
+      "name": "Privilege",
+      "description": "You have advantage on rolls to consort with nobles, negotiate prices, or leverage your reputation to get what you want."
+    }
+  },
+  {
+    "id": "loreborne",
+    "name": "Loreborne",
+    "feature": {
+      "name": "Well-Read",
+      "description": "You have advantage on rolls that involve the history, culture, or politics of a prominent person or place."
+    }
+  },
+  {
+    "id": "orderborne",
+    "name": "Orderborne",
+    "feature": {
+      "name": "Dedicated",
+      "description": "Record three sayings or values your upbringing instilled in you. Once per rest, when you describe how you’re embodying one of these principles through your current action, you can roll a d20 as your Hope Die."
+    }
+  },
+  {
+    "id": "reborne",
+    "name": "Reborne",
+    "feature": {
+      "name": "Found Family",
+      "description": "Once per rest, you can spend a Hope to use an ally’s Experience as if it were your own. When you do so, describe how your time with that ally prepared you for this moment.\nWhen you join a new community or rediscover your old one, you can permanently trade this card for that one instead."
+    }
+  },
+  {
+    "id": "ridgeborne",
+    "name": "Ridgeborne",
+    "feature": {
+      "name": "Steady",
+      "description": "You have advantage on rolls to traverse dangerous cliffs and ledges, navigate harsh environments, and use your survival knowledge."
+    }
+  },
+  {
+    "id": "seaborne",
+    "name": "Seaborne",
+    "feature": {
+      "name": "Know the Tide",
+      "description": "You can sense the ebb and flow of life. When you roll with Fear, place a token on your community card. You can hold a number of tokens equal to your level. Before you make an action roll, you can spend any number of these tokens to gain a +1 bonus to the roll for each token spent. At the end of each session, clear all unspent tokens."
+    }
+  },
+  {
+    "id": "slyborne",
+    "name": "Slyborne",
+    "feature": {
+      "name": "Scoundrel",
+      "description": "You have advantage on rolls to negotiate with criminals, detect lies, or find a safe place to hide."
+    }
+  },
+  {
+    "id": "underborne",
+    "name": "Underborne",
+    "feature": {
+      "name": "Low-Light Living",
+      "description": "When you’re in an area with low light or heavy shadow, you have advantage on rolls to hide, investigate, or perceive details within that area."
+    }
+  },
+  {
+    "id": "wanderborne",
+    "name": "Wanderborne",
+    "feature": {
+      "name": "Nomadic Pack",
+      "description": "Add a Nomadic Pack to your inventory. Once per session, you can spend a Hope to reach into this pack and pull out a mundane item that’s useful to your situation. Work with the GM to figure out what item you take out."
+    }
+  },
+  {
+    "id": "warborne",
+    "name": "Warborne",
+    "feature": {
+      "name": "Brave Face",
+      "description": "Once per session when you would be forced to mark a Stress, you can spend a Hope instead.."
+    }
+  },
+  {
+    "id": "wildborne",
+    "name": "Wildborne",
+    "feature": {
+      "name": "Lightfoot",
+      "description": "Your movement is naturally silent. You have advantage on rolls to move without being heard.\nfi"
+    }
+  }
+]

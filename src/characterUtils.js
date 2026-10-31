@@ -81,6 +81,7 @@ export const validateCharacter = (character) => {
   if (!isValidTraitAssignment(character.traits)) errors.push("Assign the trait array +2, +1, +1, +0, +0, -1 exactly once.");
   if (!character.primaryWeaponId || !character.armorId) errors.push("Choose a primary weapon and armor.");
   if (selectedPrimary?.burden === 1 && !character.secondaryWeaponId) errors.push("Choose a secondary weapon with a one-handed primary, or choose a two-handed primary.");
+  if (selectedPrimary?.burden === 2 && character.secondaryWeaponId) errors.push("A two-handed primary weapon can't be paired with a secondary weapon.");
   if (character.experiences.some(({ name }) => !name.trim())) errors.push("Create two Experiences.");
   const selectedCards = LEVEL_ONE_DOMAIN_CARDS.filter((card) => character.domainCardIds.includes(card.id));
   if (character.domainCardIds.length !== 2 || selectedCards.length !== 2) errors.push("Choose exactly two level-1 domain cards.");
