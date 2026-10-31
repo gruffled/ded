@@ -1,4 +1,5 @@
 import json
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -93,6 +94,28 @@ class ExtractorTests(unittest.TestCase):
         self.assertTrue(all(item["standard_attack"] for item in adversaries))
         self.assertTrue(all(item["difficulty"] is not None for item in adversaries))
         self.assertTrue(all(item["difficulty"] is not None for item in environments))
+
+
+
+
+class BattlePointParityTest(unittest.TestCase):
+    def test_extractor_costs_match_app_constants(self):
+        source = (SCRIPT_DIR.parent / "src" / "constants.js").read_text()
+        block = source.split("BATTLE_POINTS_BY_TYPE = {", 1)[1].split("};", 1)[0]
+        app_costs = {
+            name.capitalize(): int(cost)
+            for name, cost in re.findall(r"(\w+):\s*(\d+)", block)
+        }
+        self.assertEqual(app_costs, extractor.BATTLE_POINTS)
+
+    def test_dataset_costs_match_type_costs(self):
+        data = json.loads((SCRIPT_DIR.parent / "public" / "adversaries.json").read_text())
+        for adversary in data:
+            self.assertEqual(
+                adversary["battle_points"],
+                extractor.BATTLE_POINTS[adversary["type"]],
+                adversary["name"],
+            )
 
 
 if __name__ == "__main__":

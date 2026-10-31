@@ -6,12 +6,36 @@ on:
       - "v*.*.*"
 
 jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run SRD extractor/data tests
+        run: python3 -m unittest discover scripts -p 'test_*.py'
+
+      - name: Lint, test and build
+        run: |
+          npm run lint
+          npm test
+          npm run build
+
   publish:
+    needs: verify
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,7 +59,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ !contains(github.ref_name, '-') }}
           labels: |
             org.opencontainers.image.title=Encounter Designer for Daggerheart
             org.opencontainers.image.description=Build balanced encounters for Daggerheart

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createInitialCharacter, parseCharacter } from "./characterUtils";
 
 export const CHARACTER_STORAGE_KEY = "daggerheart-characters-v1";
@@ -91,6 +91,13 @@ export const useCharacterBuilder = () => {
 
 export const useSavedCharacters = () => {
   const [savedCharacters, setSavedCharacters] = useState(readStoredCharacters);
+  const hasChanged = useRef(false);
+
+  // Persist only after a user change, so merely opening the app never
+  // overwrites whatever is in storage.
+  useEffect(() => {
+    if (hasChanged.current) writeStoredCharacters(savedCharacters);
+  }, [savedCharacters]);
 
   const saveCharacter = (character) => {
     const record = {
@@ -98,20 +105,17 @@ export const useSavedCharacters = () => {
       id: character.id ?? crypto.randomUUID(),
       updatedAt: new Date().toISOString(),
     };
-    setSavedCharacters((current) => {
-      const next = [...current.filter((item) => item.id !== record.id), record];
-      writeStoredCharacters(next);
-      return next;
-    });
+    hasChanged.current = true;
+    setSavedCharacters((current) => [
+      ...current.filter((item) => item.id !== record.id),
+      record,
+    ]);
     return record;
   };
 
   const deleteCharacter = (id) => {
-    setSavedCharacters((current) => {
-      const next = current.filter((item) => item.id !== id);
-      writeStoredCharacters(next);
-      return next;
-    });
+    hasChanged.current = true;
+    setSavedCharacters((current) => current.filter((item) => item.id !== id));
   };
 
   const loadCharacter = (record) =>
@@ -126,67 +130,62 @@ export const useSavedCharacters = () => {
   return { savedCharacters, saveCharacter, deleteCharacter, loadCharacter };
 };
 
+const dataUrl = (file) => `${import.meta.env.BASE_URL}${file}`;
+
 /**
- * Hook to fetch adversary data
+ * Fetch a JSON array from the public directory, cancelling on unmount.
  */
-export const useAdversaryData = () => {
-  const [allAdversaries, setAllAdversaries] = useState([]);
+const useJsonData = (file, label) => {
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchAdversaries = async () => {
+    const controller = new AbortController();
+    const load = async () => {
       try {
-        const response = await fetch("/adversaries.json");
+        const response = await fetch(dataUrl(file), {
+          signal: controller.signal,
+        });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
-        setAllAdversaries(data);
+        const json = await response.json();
+        if (!Array.isArray(json)) {
+          throw new Error(`${file} did not contain a list`);
+        }
+        setData(json);
       } catch (e) {
-        console.error("Failed to fetch adversary data:", e);
+        if (controller.signal.aborted) return;
+        console.error(`Failed to fetch ${label} data:`, e);
         setError(
-          "Could not load adversary data. Please make sure 'adversaries.json' is in the public directory."
+          `Could not load ${label} data. Please make sure '${file}' is in the public directory.`
         );
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     };
-    fetchAdversaries();
-  }, []);
+    load();
+    return () => controller.abort();
+  }, [file, label]);
 
-  return { allAdversaries, isLoading, error };
+  return { data, isLoading, error };
+};
+
+/**
+ * Hook to fetch adversary data
+ */
+export const useAdversaryData = () => {
+  const { data, isLoading, error } = useJsonData("adversaries.json", "adversary");
+  return { allAdversaries: data, isLoading, error };
 };
 
 /**
  * Hook to fetch SRD 2.0 environment data.
  */
 export const useEnvironmentData = () => {
-  const [allEnvironments, setAllEnvironments] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchEnvironments = async () => {
-      try {
-        const response = await fetch("/environments.json");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        setAllEnvironments(await response.json());
-      } catch (e) {
-        console.error("Failed to fetch environment data:", e);
-        setError(
-          "Could not load environment data. Please make sure 'environments.json' is in the public directory."
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchEnvironments();
-  }, []);
-
-  return { allEnvironments, isLoading, error };
+  const { data, isLoading, error } = useJsonData("environments.json", "environment");
+  return { allEnvironments: data, isLoading, error };
 };
 
 /**

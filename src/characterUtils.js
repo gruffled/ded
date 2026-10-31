@@ -94,15 +94,60 @@ export const serializeCharacter = (character) => JSON.stringify({
   character,
 }, null, 2);
 
+const sameShape = (value, fallback) =>
+  Array.isArray(fallback)
+    ? Array.isArray(value)
+    : typeof value === typeof fallback && value !== null;
+
+const stringList = (value, fallback) =>
+  Array.isArray(value) && value.every((item) => typeof item === "string")
+    ? value
+    : fallback;
+
+/**
+ * Parse an exported/stored character. Imported files are untrusted, so every
+ * field is checked against the shape of a fresh character and anything that
+ * does not match falls back to its default instead of crashing the UI.
+ */
 export const parseCharacter = (raw) => {
   const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
   if (parsed?.format !== "daggerheart-character" || parsed?.version !== 1 || !parsed.character) {
     throw new Error("This is not a supported Daggerheart character file.");
   }
-  return {
-    ...createInitialCharacter(),
-    ...parsed.character,
-    ancestryFeatureSources: parsed.character.ancestryFeatureSources ?? [0, 1],
-    traits: { ...initialTraits(), ...parsed.character.traits },
-  };
+  const source = parsed.character;
+  const defaults = createInitialCharacter();
+  const character = { ...defaults };
+  for (const key of Object.keys(defaults)) {
+    if (sameShape(source[key], defaults[key])) character[key] = source[key];
+  }
+  if (typeof source.id === "string") character.id = source.id;
+  if (typeof source.updatedAt === "string") character.updatedAt = source.updatedAt;
+
+  character.level = Number.isInteger(source.level) ? source.level : defaults.level;
+  for (const key of ["ancestryIds", "domainCardIds", "backgroundAnswers", "inventory"]) {
+    character[key] = stringList(source[key], defaults[key]);
+  }
+  character.ancestryFeatureSources =
+    Array.isArray(source.ancestryFeatureSources) &&
+    source.ancestryFeatureSources.length === 2 &&
+    source.ancestryFeatureSources.every((value) => value === 0 || value === 1)
+      ? source.ancestryFeatureSources
+      : defaults.ancestryFeatureSources;
+  character.experiences = defaults.experiences.map((fallback, index) => {
+    const experience = Array.isArray(source.experiences) ? source.experiences[index] : null;
+    return {
+      name: typeof experience?.name === "string" ? experience.name : fallback.name,
+      modifier: Number.isFinite(experience?.modifier) ? experience.modifier : fallback.modifier,
+    };
+  });
+  character.connections = Array.isArray(source.connections)
+    ? source.connections.filter((item) => item && typeof item === "object")
+    : defaults.connections;
+  character.traits = Object.fromEntries(
+    Object.entries(initialTraits()).map(([id, fallback]) => [
+      id,
+      Number.isFinite(source.traits?.[id]) ? source.traits[id] : fallback,
+    ])
+  );
+  return character;
 };
